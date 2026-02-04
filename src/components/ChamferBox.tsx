@@ -6,6 +6,7 @@ interface ChamferBoxBaseProps {
   children: ReactNode;
   orientation?: "tl-br" | "tr-bl";
   hasShadow?: boolean;
+  hasDecoration?: boolean;
   shadowPosition?: "left" | "right";
   variant?: "dark" | "light";
   className?: string;
@@ -19,6 +20,7 @@ export const ChamferBox = <T extends ElementType = "div">({
   children,
   orientation = "tl-br",
   hasShadow = false,
+  hasDecoration = false,
   shadowPosition = "left",
   variant = "dark",
   className = "",
@@ -28,6 +30,7 @@ export const ChamferBox = <T extends ElementType = "div">({
   const orientationClass = orientation;
   const shadowClass = hasShadow ? "has-shadow" : "";
   const shadowPosClass = shadowPosition === "right" ? "shadow-right" : "";
+  const decorationClass = hasDecoration ? "has-decoration" : "";
 
   const variantStyles =
     variant === "light"
@@ -41,7 +44,7 @@ export const ChamferBox = <T extends ElementType = "div">({
 
   return (
     <Component
-      className={`chamfer-box ${orientationClass} ${shadowClass} ${shadowPosClass} ${className}`}
+      className={`chamfer-box ${orientationClass} ${shadowClass} ${shadowPosClass} ${decorationClass} ${className}`}
       style={variantStyles}
       {...props}
     >

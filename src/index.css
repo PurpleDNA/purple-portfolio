@@ -16,6 +16,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-satoshi: "Satoshi", sans-serif;
+  --font-consolas: "Consolas", monospace;
+
+  /* Set Satoshi as global default */
+  --font-sans: var(--font-satoshi);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -139,14 +145,14 @@
     --chamfer-size: 16px;
     --border-width: 1px;
     --border-color: rgba(255, 255, 255, 0.2);
-    --box-bg: #1a1a1a;
+    /* --box-bg: #1a1a1a; */
     --shadow-color: rgba(0, 0, 0, 0.5);
     --shadow-offset-x: -8px;
     --shadow-offset-y: 8px;
 
     position: relative;
     display: inline-flex;
-    background: var(--box-bg);
+    /* background: var(--box-bg); */
     color: white;
     transition: all 0.2s ease;
   }
@@ -175,8 +181,8 @@
   }
 
   /* Decorative Borders - Pseudo elements */
-  .chamfer-box::before,
-  .chamfer-box::after {
+  .chamfer-box.has-decoration::before,
+  .chamfer-box.has-decoration::after {
     content: "";
     position: absolute;
     width: 12px;
