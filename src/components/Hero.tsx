@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Typewriter from "./Typewriter";
 
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [targetText, setTargetText] = useState("KADIRI MAROOF AKINBAYODE");
   const [isHovered, setIsHovered] = useState(false);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -23,14 +25,27 @@ const Hero = () => {
       {/* Top Section */}
       <div className="flex flex-col gap-6 z-10">
         <h2
-          className="font-consolas text-lg md:text-xl text-white tracking-[0.2em] uppercase group py-3 w-max"
+          className={`font-consolas text-lg md:text-xl text-white tracking-[0.2em] uppercase group py-3 w-1/2 transition-all duration-300 ease-in-out ${isHovered ? "border-y cursor-crosshair border-white" : ""}`}
           onMouseEnter={() => {
-            setTargetText("CODENAME: PURPLE DNA");
-            setIsHovered(true);
+            if (leaveTimeoutRef.current) {
+              clearTimeout(leaveTimeoutRef.current);
+              leaveTimeoutRef.current = null;
+            }
+            hoverTimeoutRef.current = setTimeout(() => {
+              setTargetText("CODENAME: PURPLE DNA");
+              setIsHovered(true);
+            }, 250);
           }}
           onMouseLeave={() => {
-            setTargetText("KADIRI MAROOF AKINBAYODE");
-            setIsHovered(false);
+            if (hoverTimeoutRef.current) {
+              clearTimeout(hoverTimeoutRef.current);
+              hoverTimeoutRef.current = null;
+            }
+
+            leaveTimeoutRef.current = setTimeout(() => {
+              setTargetText("KADIRI MAROOF AKINBAYODE");
+              setIsHovered(false);
+            }, 250);
           }}
         >
           <Typewriter text={targetText} speed={50} eraseSpeed={20} />

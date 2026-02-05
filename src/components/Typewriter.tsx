@@ -93,7 +93,7 @@ const Typewriter = ({
           <strong className="text-purple-500 transition-colors duration-500">
             DNA
           </strong>
-          {parts.slice(1).join("DNA")}
+          {/* {parts.slice(1).join("DNA")} */}
         </>
       );
     }
@@ -101,7 +101,7 @@ const Typewriter = ({
   };
 
   return (
-    <span className={className + " cursor-crosshair"}>
+    <span className={className}>
       {renderContent()}
       <span className="w-2 h-[1.1em] bg-white inline-block ml-1 align-middle animate-blink shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
     </span>

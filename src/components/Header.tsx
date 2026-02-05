@@ -12,6 +12,7 @@ const Header = () => {
           orientation="tr-bl"
           hasShadow={true}
           shadowPosition="right"
+          className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
         >
           <div className="bg-white flex items-center gap-1 px-6 py-2 text-background">
             <img src="assets/logos/telegram.png" alt="" className="w-5 h-5" />
