@@ -1,10 +1,39 @@
+import { useState, useEffect } from "react";
+import Typewriter from "./Typewriter";
+
 const Hero = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [targetText, setTargetText] = useState("KADIRI MAROOF AKINBAYODE");
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Calculate normalized mouse position relative to center of viewport (-0.5 to 0.5)
+      const x = e.clientX / window.innerWidth - 0.5;
+      const y = e.clientY / window.innerHeight - 0.5;
+      setMousePos({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <div className="relative min-h-[calc(100vh-80px)] flex flex-col justify-between px-6 py-12 md:px-16 md:py-20 lg:px-24 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-80px)] flex flex-col justify-between px-6 py-12 md:px-16 md:py-20 lg:px-24 overflow-hidden backdrop-blur-3xl">
       {/* Top Section */}
       <div className="flex flex-col gap-6 z-10">
-        <h2 className="font-consolas text-lg md:text-xl text-white tracking-[0.2em] uppercase">
-          KADIRI MAROOF AKINBAYODE
+        <h2
+          className="font-consolas text-lg md:text-xl text-white tracking-[0.2em] uppercase group py-3 w-max"
+          onMouseEnter={() => {
+            setTargetText("CODENAME: PURPLE DNA");
+            setIsHovered(true);
+          }}
+          onMouseLeave={() => {
+            setTargetText("KADIRI MAROOF AKINBAYODE");
+            setIsHovered(false);
+          }}
+        >
+          <Typewriter text={targetText} speed={50} eraseSpeed={20} />
         </h2>
 
         <div className="flex items-center gap-3 font-consolas text-[11px] md:text-sm text-[#0EC126] uppercase tracking-wider">
@@ -26,7 +55,7 @@ const Hero = () => {
 
       {/* Main Title Section */}
       <div className="mb-12 md:mb-20 z-10">
-        <h1 className="font-consolas text-2xl md:text-4xl lg:text-6xl font-bold text-white leading-[1.1] max-w-6xl">
+        <h1 className="font-consolas text-2xl md:text-4xl lg:text-6xl font-bold text-white leading-[1.1] max-w-6xl animate-slide-up-fade opacity-0 [animation-delay:400ms]">
           Front End Developer & AI Automation Engineer
         </h1>
       </div>
@@ -34,7 +63,14 @@ const Hero = () => {
       <img
         src="assets/dna-gray.png"
         alt="DNA Structure"
-        className="absolute right-0 -bottom-20 w-1/2 opacity-50 "
+        className={`absolute left-1/2 top-1/2 -translate-1/2 w-1/2 pointer-events-none transition-all duration-700 ease-out blur-sm ${
+          isHovered
+            ? "opacity-60 sepia-[1] hue-rotate-250 saturate-[5] brightness-125 drop-shadow-[0_0_50px_rgba(168,85,247,0.5)] animate-dna-pulse"
+            : "opacity-20 scale-[1.3]"
+        }`}
+        style={{
+          transform: `translate(${mousePos.x * -400}px, ${mousePos.y * -400}px)`,
+        }}
       />
     </div>
   );
