@@ -296,4 +296,8 @@
   .animate-music-bar-3 {
     animation: music-bar 0.7s ease-in-out infinite;
   }
+
+  .section {
+    @apply px-6 md:px-12 lg:px-16 py-8;
+  }
 }

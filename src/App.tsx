@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import BackgroundMusic from "./components/BackgroundMusic";
+import Projects from "./components/Projects";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <BackgroundMusic />
       <Header />
       <Hero />
+      <Projects />
     </div>
   );
 }
