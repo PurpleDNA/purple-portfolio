@@ -1,15 +1,31 @@
 import { ChamferBox } from "./ChamferBox";
 
 const socialLinks = [
-  { name: "LinkedIn", logo: "/assets/logos/linkedin.png", url: "#" },
+  {
+    name: "LinkedIn",
+    logo: "/assets/logos/linkedin.png",
+    url: "https://www.linkedin.com/in/maroof-kadiri",
+  },
   {
     name: "WhatsApp",
     logo: "/assets/logos/whatsapp.png",
     url: "https://wa.me/2349065919964",
   },
-  { name: "Instagram", logo: "/assets/logos/instagram.png", url: "#" },
-  { name: "X", logo: "/assets/logos/twitter.png", url: "#" },
-  { name: "GitHub", logo: "/assets/logos/github.png", url: "#" },
+  {
+    name: "Instagram",
+    logo: "/assets/logos/instagram.png",
+    url: "https://www.instagram.com/mk_bayo/",
+  },
+  {
+    name: "X",
+    logo: "/assets/logos/twitter.png",
+    url: "https://x.com/mk_bayo",
+  },
+  {
+    name: "GitHub",
+    logo: "/assets/logos/github.png",
+    url: "https://github.com/PurpleDNA/",
+  },
 ];
 
 const Contact = () => {
@@ -76,7 +92,7 @@ const Contact = () => {
                 <img
                   src={social.logo}
                   alt={social.name}
-                  className="w-8 h-8 object-contain opacity-80"
+                  className="w-8 h-8 object-contain opacity-80 hover:opacity-100 transition-all duration-300 ease-in-out hover:-translate-y-1"
                 />
               </a>
             ))}
@@ -93,27 +109,25 @@ const Contact = () => {
               shadowPosition="left"
               className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out inline-block"
             >
-              <div className="bg-[#d1d1d1] flex items-center gap-3 px-8 py-3 text-black">
+              <a
+                href="assets/MAROOF_KADIRI_CV.pdf"
+                target="_blank"
+                className="bg-[#d1d1d1] flex items-center gap-3 px-8 py-3 text-black"
+              >
                 <img src="assets/logos/resume.png" alt="" className="w-5 h-5" />
                 <span className="font-consolas font-bold">My Resume</span>
-              </div>
+              </a>
             </ChamferBox>
           </div>
         </div>
 
         {/* Right Side: Profile Image */}
         <div className="flex-1 w-full max-w-xl">
-          <ChamferBox
-            orientation="tl-br"
-            hasShadow={true}
-            className="w-full aspect-[4/5] md:aspect-square overflow-hidden"
-          >
-            <img
-              src="assets/kadiri-maroof.png"
-              alt="Maroof Kadiri"
-              className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-700"
-            />
-          </ChamferBox>
+          <img
+            src="assets/kadiri-maroof.png"
+            alt="Maroof Kadiri"
+            className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-700"
+          />
         </div>
       </div>
     </section>
