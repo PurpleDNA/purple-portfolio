@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChamferBox } from "./ChamferBox";
+import { motion } from "framer-motion";
 import ProjectComponent from "./ProjectComponent";
 
 interface Project {
@@ -10,54 +10,53 @@ interface Project {
   image?: string;
 }
 
-const projects = [
+const projects: Project[] = [
   {
     name: "Centrium - ",
     organization: "Sabertooth",
     skill: "Frontend",
     year: "2024",
-    image: "assets/projects/centrium.png",
+    image: "/assets/projects/centrium.png",
   },
   {
     name: "TopSpecial Ops - ",
     organization: "Bakery",
     skill: "Fullstack",
     year: "2025",
-    image: "assets/projects/top-special.png",
+    image: "/assets/projects/top-special.png",
   },
   {
     name: "Purple Combinator - ",
     organization: "Startup Platform",
     skill: "Fullstack",
     year: "2024",
-    image: "assets/projects/purple-combinator.png",
+    image: "/assets/projects/purple-combinator.png",
   },
   {
     name: "FPL Pulse - ",
     organization: "Startup Platform",
     skill: "Frontend",
     year: "2025",
-    image: "assets/projects/fpl-pulse.png",
+    image: "/assets/projects/fpl-pulse.png",
   },
   {
     name: "N8N Lead Generation",
     organization: "",
     skill: "Automation",
     year: "2026",
-    image: "assets/projects/n8n-leads.png",
+    image: "/assets/projects/n8n-leads.png",
   },
   {
     name: "Aguda Partners ",
     organization: "Website",
     skill: "Frontend",
     year: "2025",
-    image: "assets/projects/aguda.png",
+    image: "/assets/projects/aguda.png",
   },
 ];
 
 const Projects = () => {
-  const [project, setProject] = useState<Project>(projects[0]);
-  console.log(project);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
     <div className="section space-y-8">
@@ -73,21 +72,39 @@ const Projects = () => {
         </p>
       </div>
       <div className="flex justify-between gap-10 items-center">
-        <div className="flex flex-col gap-10 w-1/2">
-          {projects.map((project, index) => (
+        <div className="flex flex-col gap-10 w-[40%]">
+          {projects.map((p, index) => (
             <ProjectComponent
               key={index}
-              name={project.name}
-              organization={project.organization}
-              skill={project.skill}
-              year={project.year}
-              setProject={() => setProject(project)}
+              name={p.name}
+              organization={p.organization}
+              skill={p.skill}
+              year={p.year}
+              isActive={index === currentIndex}
+              index={index}
+              setProject={() => setCurrentIndex(index)}
             />
           ))}
         </div>
-        <ChamferBox className="w-1/2">
-          <img src={project.image} alt="" />
-        </ChamferBox>
+        <div className="w-1/2 overflow-hidden aspect-square relative shrink-0">
+          <motion.div
+            className="absolute inset-0 w-full h-full"
+            animate={{ y: `-${currentIndex * 100}%` }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              mass: 1,
+              duration: 300,
+            }}
+          >
+            {projects.map((p, index) => (
+              <div key={index} className="w-full h-full shrink-0 p-10">
+                <img src={p.image} alt={p.name} className="w-full h-full" />
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </div>
   );
