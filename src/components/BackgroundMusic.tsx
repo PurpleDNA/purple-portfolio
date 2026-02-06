@@ -5,7 +5,7 @@ import { cn } from "../lib/utils";
 const BackgroundMusic: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(0.3);
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -52,22 +52,6 @@ const BackgroundMusic: React.FC = () => {
 
     playAudio();
 
-    // Event listener for user interaction to trigger play if blocked
-    const handleFirstInteraction = () => {
-      if (!isPlaying) {
-        playAudio();
-      }
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
-    };
-
-    window.addEventListener("click", handleFirstInteraction);
-    window.addEventListener("keydown", handleFirstInteraction);
-
-    return () => {
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

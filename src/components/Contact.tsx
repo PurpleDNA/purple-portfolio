@@ -1,4 +1,5 @@
 import { ChamferBox } from "./ChamferBox";
+import { useSound } from "../hooks/useSound";
 
 const socialLinks = [
   {
@@ -29,6 +30,9 @@ const socialLinks = [
 ];
 
 const Contact = () => {
+  const { play: playClick1 } = useSound("/audio/click-1.mp3");
+  const { play: playMouseClick } = useSound("/audio/mouse-click.mp3");
+
   return (
     <section id="contact" className="section bg-black text-white py-20 pb-32">
       <div className="max-w-7xl mx-auto w-full flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
@@ -75,7 +79,12 @@ const Contact = () => {
                 Email
               </h3>
               <p className="font-satoshi text-lg text-gray-200">
-                maroof.kadiri@outlook.com
+                <a
+                  href="mailto:maroof.kadiri@outlook.com"
+                  className="transition-all duration-300 ease-in-out hover:border-b hover:border-white"
+                >
+                  maroof.kadiri@outlook.com
+                </a>
               </p>
             </div>
           </div>
@@ -84,9 +93,11 @@ const Contact = () => {
           <div className="flex flex-wrap gap-8 pt-4">
             {socialLinks.map((social) => (
               <a
+                key={social.name}
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => playMouseClick()}
                 className=" flex items-center justify-center"
               >
                 <img
@@ -112,6 +123,7 @@ const Contact = () => {
               <a
                 href="assets/MAROOF_KADIRI_CV.pdf"
                 target="_blank"
+                onClick={() => playClick1()}
                 className="bg-[#d1d1d1] flex items-center gap-3 px-8 py-3 text-black"
               >
                 <img src="assets/logos/resume.png" alt="" className="w-5 h-5" />

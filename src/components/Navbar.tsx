@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChamferBox } from "./ChamferBox";
+import { useSound } from "../hooks/useSound";
 
 const TABS = [
   { label: "Work", id: "work" },
@@ -10,10 +11,12 @@ const TABS = [
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState("Work");
+  const { play } = useSound("/audio/click-1.mp3");
 
   const scrollToSection = (id: string, label: string) => {
     const element = document.getElementById(id);
     if (element) {
+      play();
       element.scrollIntoView({ behavior: "smooth", block: "center" });
       setActiveTab(label);
     }

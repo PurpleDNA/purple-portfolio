@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useSound } from "../hooks/useSound";
 
 interface ProjectProps {
   name: string;
@@ -20,6 +21,8 @@ const ProjectComponent = ({
   index,
   setProject,
 }: ProjectProps) => {
+  const { play } = useSound("/audio/click-1.mp3");
+
   return (
     <motion.div
       initial={{ x: -50, opacity: 0 }}
@@ -37,6 +40,9 @@ const ProjectComponent = ({
             : "text-gray-700 hover:text-white hover:scale-110"
         }
       `}
+      onClick={() => {
+        play();
+      }}
       onMouseOver={() => setProject()}
     >
       <span>
