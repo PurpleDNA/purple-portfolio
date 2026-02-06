@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 
 const Header = () => {
   return (
-    <div className="flex items-center w-full px-[5%] py-4">
+    <div className="fixed top-0 left-0 w-full z-100 bg-transparent flex items-center px-[5%] py-4">
       <div className="flex-1" />
       <Navbar />
       <div className="flex-1 flex justify-end">
@@ -11,7 +11,7 @@ const Header = () => {
           as="div"
           orientation="tr-bl"
           hasShadow={true}
-          shadowPosition="right"
+          shadowPosition="left"
           className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
         >
           <div className="bg-white flex items-center gap-1 px-6 py-2 text-background">

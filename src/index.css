@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html {
+  scroll-behavior: smooth;
+}
+
+[id] {
+  scroll-margin-top: 100px; /* Offset for sticky header */
+}
+
 @font-face {
   font-family: "Satoshi";
   src: url("/fonts/Satoshi-Variable.ttf") format("truetype");
@@ -146,9 +154,9 @@
     --border-width: 1px;
     --border-color: rgba(255, 255, 255, 0.2);
     /* --box-bg: #1a1a1a; */
-    --shadow-color: rgba(0, 0, 0, 0.5);
-    --shadow-offset-x: -8px;
-    --shadow-offset-y: 8px;
+    --shadow-color: rgba(0, 0, 0, 0.85);
+    --shadow-offset-x: -12px;
+    --shadow-offset-y: 12px;
 
     position: relative;
     display: inline-flex;
@@ -220,16 +228,17 @@
     border-left: none;
   }
 
-  /* Shadow logic using drop-shadow to follow clip-path */
-  .chamfer-box.has-shadow {
+  /* Shadow logic - applied to wrapper to avoid clipping by clip-path */
+  .chamfer-box-shadow-wrapper.has-shadow {
+    display: inline-flex;
     filter: drop-shadow(
       var(--shadow-offset-x) var(--shadow-offset-y) 0px var(--shadow-color)
     );
   }
 
   /* Shadow positioning */
-  .chamfer-box.shadow-right {
-    --shadow-offset-x: 8px;
+  .chamfer-box-shadow-wrapper.shadow-right {
+    --shadow-offset-x: 12px;
   }
 
   @keyframes blink {

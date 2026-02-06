@@ -37,7 +37,7 @@ const ProjectComponent = ({
             : "text-gray-700 hover:text-white hover:scale-110"
         }
       `}
-      onClick={() => setProject()}
+      onMouseOver={() => setProject()}
     >
       <span>
         {name}

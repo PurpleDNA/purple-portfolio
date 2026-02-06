@@ -1,11 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChamferBox } from "./ChamferBox";
 
-const TABS = ["Work", "Profile", "Contact"];
+const TABS = [
+  { label: "Work", id: "work" },
+  { label: "Profile", id: "profile" },
+  { label: "Contact", id: "contact" },
+];
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState("Work");
+
+  const scrollToSection = (id: string, label: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setActiveTab(label);
+    }
+  };
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px", // Adjust these values to tune when a section is considered "active"
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const tab = TABS.find((t) => t.id === entry.target.id);
+          if (tab) {
+            setActiveTab(tab.label);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      observerCallback,
+      observerOptions,
+    );
+
+    TABS.forEach((tab) => {
+      const element = document.getElementById(tab.id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <ChamferBox orientation="tl-br" className="bg-[#4A4A4A] p-px flex-none">
@@ -13,16 +56,18 @@ const Navbar = () => {
         <div className="flex justify-center items-center relative px-20">
           {TABS.map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
+              key={tab.label}
+              onClick={() => scrollToSection(tab.id, tab.label)}
               className={`relative px-8 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer outline-none ${
-                activeTab === tab
+                activeTab === tab.label
                   ? "text-white"
                   : "text-gray-400 hover:text-gray-200"
               }`}
             >
-              <span className="relative z-10">{tab}</span>
-              {activeTab === tab && (
+              <span className="relative z-10 font-consolas uppercase tracking-wider">
+                {tab.label}
+              </span>
+              {activeTab === tab.label && (
                 <motion.div
                   layoutId="active-tab"
                   className="absolute inset-y-0 left-0 right-0 border-y border-white"

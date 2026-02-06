@@ -56,12 +56,12 @@ const Hero = () => {
             <img
               src="assets/green-circle.png"
               alt=""
-              className="relative animate-spin w-full h-full"
+              className="relative animate-spin w-full h-full animation-duration-3000"
             />
             <img
               src="assets/green-ellipse.png"
               alt=""
-              className="absolute left-1/2 top-1/2 w-3 h-3 -translate-x-1/2 -translate-y-1/2"
+              className="absolute left-1/2 top-1/2 w-3 h-3 -translate-x-1/2 -translate-y-1/2 animate-[spin_3s_linear_infinite_reverse]"
             />
           </div>
           <p>Available for work</p>

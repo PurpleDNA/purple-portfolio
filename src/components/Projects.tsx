@@ -59,7 +59,7 @@ const Projects = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <div className="section space-y-8">
+    <div id="work" className="section space-y-8">
       <div className="flex flex-col gap-4 w-full">
         <h1 className="font-consolas md:text-2xl lg:text-3xl font-bold text-white leading-[1.1] ">
           Selected Projects

@@ -42,13 +42,25 @@ export const ChamferBox = <T extends ElementType = "div">({
         }
       : ({} as React.CSSProperties);
 
-  return (
+  const content = (
     <Component
-      className={`chamfer-box ${orientationClass} ${shadowClass} ${shadowPosClass} ${decorationClass} ${className}`}
+      className={`chamfer-box ${orientationClass} ${decorationClass} ${className}`}
       style={variantStyles}
       {...props}
     >
       {children}
     </Component>
   );
+
+  if (hasShadow) {
+    return (
+      <div
+        className={`chamfer-box-shadow-wrapper ${shadowClass} ${shadowPosClass}`}
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return content;
 };
