@@ -14,7 +14,7 @@ const Navbar = () => {
   const scrollToSection = (id: string, label: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
       setActiveTab(label);
     }
   };
