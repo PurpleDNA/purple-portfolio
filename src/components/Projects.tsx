@@ -1,59 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ProjectComponent from "./ProjectComponent";
-
-interface Project {
-  name: string;
-  organization: string;
-  skill: string;
-  year: string;
-  image?: string;
-}
-
-const projects: Project[] = [
-  {
-    name: "Centrium - ",
-    organization: "Sabertooth",
-    skill: "Frontend",
-    year: "2024",
-    image: "/assets/projects/centrium.png",
-  },
-  {
-    name: "TopSpecial Ops - ",
-    organization: "Bakery",
-    skill: "Fullstack",
-    year: "2025",
-    image: "/assets/projects/top-special.png",
-  },
-  {
-    name: "Purple Combinator - ",
-    organization: "Startup Platform",
-    skill: "Fullstack",
-    year: "2024",
-    image: "/assets/projects/purple-combinator.png",
-  },
-  {
-    name: "FPL Pulse - ",
-    organization: "Startup Platform",
-    skill: "Frontend",
-    year: "2025",
-    image: "/assets/projects/fpl-pulse.png",
-  },
-  {
-    name: "N8N Lead Generation",
-    organization: "",
-    skill: "Automation",
-    year: "2026",
-    image: "/assets/projects/n8n-leads.png",
-  },
-  {
-    name: "Aguda Partners ",
-    organization: "Website",
-    skill: "Frontend",
-    year: "2025",
-    image: "/assets/projects/aguda.png",
-  },
-];
+import { projects } from "../data/projects";
 
 const Projects = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -75,7 +23,8 @@ const Projects = () => {
         <div className="flex flex-col gap-10 w-[40%]">
           {projects.map((p, index) => (
             <ProjectComponent
-              key={index}
+              key={p.id}
+              id={p.id}
               name={p.name}
               organization={p.organization}
               skill={p.skill}

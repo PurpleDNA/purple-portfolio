@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSound } from "../hooks/useSound";
 
 interface ProjectProps {
+  id: string;
   name: string;
   organization: string;
   skill: string;
@@ -13,6 +15,7 @@ interface ProjectProps {
 }
 
 const ProjectComponent = ({
+  id,
   name,
   organization,
   skill,
@@ -21,6 +24,7 @@ const ProjectComponent = ({
   index,
   setProject,
 }: ProjectProps) => {
+  const navigate = useNavigate();
   const { play } = useSound("/audio/click-1.mp3");
 
   return (
@@ -42,6 +46,7 @@ const ProjectComponent = ({
       `}
       onClick={() => {
         play();
+        navigate(`/project/${id}`);
       }}
       onMouseOver={() => setProject()}
     >
