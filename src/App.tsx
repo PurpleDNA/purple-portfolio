@@ -6,6 +6,7 @@ import Projects from "./components/Projects";
 import Profile from "./components/Profile";
 import Contact from "./components/Contact";
 import ProjectDetails from "./components/ProjectDetails";
+// noice
 
 const Home = () => (
   <div className="pt-20">
