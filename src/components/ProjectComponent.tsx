@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSound } from "../hooks/useSound";
 
 interface ProjectProps {
-  id: string;
   name: string;
   organization: string;
   skill: string;
@@ -12,10 +10,10 @@ interface ProjectProps {
   isActive?: boolean;
   index: number;
   setProject: () => void;
+  onClick: () => void;
 }
 
 const ProjectComponent = ({
-  id,
   name,
   organization,
   skill,
@@ -23,8 +21,8 @@ const ProjectComponent = ({
   isActive,
   index,
   setProject,
+  onClick,
 }: ProjectProps) => {
-  const navigate = useNavigate();
   const { play } = useSound("/audio/click-1.mp3");
 
   return (
@@ -46,16 +44,16 @@ const ProjectComponent = ({
       `}
       onClick={() => {
         play();
-        navigate(`/project/${id}`);
+        onClick();
       }}
       onMouseOver={() => setProject()}
     >
-      <span>
+      <span className="shrink-0">
         {name}
         {organization}
       </span>
       <hr className="flex-1 border-gray-800" />
-      <span>
+      <span className="shrink-0 uppercase font-consolas text-[10px] tracking-widest opacity-50">
         {skill} {year}
       </span>
     </motion.div>

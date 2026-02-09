@@ -1,0 +1,33 @@
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide {
+  animation: slide 30s linear infinite;
+}
+
+.animate-slide:hover {
+  animation-play-state: paused;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Slightly wider to accommodate the invisible border */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 20px;
+  margin-block: 20px; /* This keeps the scrollbar away from the curved top/bottom edges */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9333ea, #ffffff);
+  background-clip: padding-box; /* Crucial: clips the background inside the border */
+  border: 2px solid transparent; /* Acts as a margin around the thumb */
+  border-radius: 20px;
+}

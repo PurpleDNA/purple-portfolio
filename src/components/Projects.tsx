@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ProjectComponent from "./ProjectComponent";
+import ProjectModal from "./ProjectModal";
 import { projects } from "../data/projects";
 
 const Projects = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null,
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleProjectClick = (id: string) => {
+    setSelectedProjectId(id);
+    setIsModalOpen(true);
+  };
 
   return (
     <div id="work" className="section space-y-8">
@@ -24,7 +34,6 @@ const Projects = () => {
           {projects.map((p, index) => (
             <ProjectComponent
               key={p.id}
-              id={p.id}
               name={p.name}
               organization={p.organization}
               skill={p.skill}
@@ -32,6 +41,7 @@ const Projects = () => {
               isActive={index === currentIndex}
               index={index}
               setProject={() => setCurrentIndex(index)}
+              onClick={() => handleProjectClick(p.id)}
             />
           ))}
         </div>
@@ -55,6 +65,13 @@ const Projects = () => {
           </motion.div>
         </div>
       </div>
+
+      <ProjectModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        projectId={selectedProjectId}
+        onNavigate={(id: string) => setSelectedProjectId(id)}
+      />
     </div>
   );
 };
