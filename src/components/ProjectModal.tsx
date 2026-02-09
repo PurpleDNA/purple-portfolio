@@ -67,24 +67,24 @@ const ProjectModal = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10"
+          className="fixed inset-0 z-100 bg-[#0a0a0a] backdrop-blur-md backdrop-opacity-10"
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative w-full max-w-6xl rounded-3xl p-px bg-white overflow-hidden "
+            className="relative w-full h-full overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Viewport (90vh) */}
-            <div className="relative w-full h-full max-h-[90vh]  bg-[#0a0a0a] rounded-[calc(1.5rem-1px)]  overflow-hidden">
+            {/* Modal Viewport (Full Screen) */}
+            <div className="relative w-full h-full overflow-hidden">
               {/* 1. Scrollable Content Area */}
               <div
                 key={projectId}
                 ref={scrollContainerRef}
-                className={`w-full h-full max-h-[90vh] p-6 md:p-16 custom-scrollbar ${
+                className={`w-full h-screen p-6 md:p-10 custom-scrollbar ${
                   enlargedIndex !== null ? "overflow-hidden" : "overflow-y-auto"
                 }`}
               >
@@ -92,19 +92,6 @@ const ProjectModal = ({
                 <div
                   className={`transition-opacity duration-300 ${enlargedIndex !== null ? "opacity-0 pointer-events-none" : "opacity-100"}`}
                 >
-                  {/* Close Button */}
-                  <button
-                    onClick={() => {
-                      play();
-                      onClose();
-                    }}
-                    className="absolute top-6 right-6 p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-colors group z-50 focus:outline-none"
-                  >
-                    <X
-                      size={24}
-                      className="text-gray-400 group-hover:text-white transition-colors"
-                    />
-                  </button>
                   {/* Back Button */}
                   <button
                     onClick={() => {
@@ -126,13 +113,13 @@ const ProjectModal = ({
                       <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight">
                         {project.title}
                       </h1>
-                      <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-xl">
+                      <p className="text-base md:text-lg leading-relaxed max-w-xl">
                         {project.description}
                       </p>
 
                       <div className="grid grid-cols-2 gap-8">
                         <div>
-                          <h3 className="text-xs font-consolas text-white/50 mb-2 uppercase tracking-widest font-semibold">
+                          <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
                             Industry
                           </h3>
                           <p className="text-gray-200 text-sm font-satoshi">
@@ -140,7 +127,7 @@ const ProjectModal = ({
                           </p>
                         </div>
                         <div>
-                          <h3 className="text-xs font-consolas text-white/50 mb-2 uppercase tracking-widest font-semibold">
+                          <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
                             Classification
                           </h3>
                           <p className="text-gray-200 text-sm font-satoshi">
@@ -148,7 +135,7 @@ const ProjectModal = ({
                           </p>
                         </div>
                         <div>
-                          <h3 className="text-xs font-consolas text-white/50 mb-2 uppercase tracking-widest font-semibold">
+                          <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
                             Technology
                           </h3>
                           <p className="text-gray-200 text-sm font-satoshi">
@@ -156,7 +143,7 @@ const ProjectModal = ({
                           </p>
                         </div>
                         <div>
-                          <h3 className="text-xs font-consolas text-white/50 mb-2 uppercase tracking-widest font-semibold">
+                          <h3 className="text-xs font-consolas  mb-2 uppercase tracking-widest font-semibold">
                             Role
                           </h3>
                           <p className="text-gray-200 text-sm font-satoshi">
@@ -211,7 +198,7 @@ const ProjectModal = ({
                       {project.images.concat(project.images).map((img, i) => (
                         <div
                           key={i}
-                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-xl overflow-hidden shrink-0 border border-white/5 shadow-2xl cursor-pointer"
+                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-xl overflow-hidden shrink-0 border border-white/5 shadow-2xl cursor-pointer hover:scale-120 transition-all duration-300 hover:mx-10"
                           onClick={() => {
                             play();
                             setEnlargedIndex(i % project.images.length);
@@ -220,7 +207,7 @@ const ProjectModal = ({
                           <img
                             src={img}
                             alt=""
-                            className="w-full h-full object-cover transition-all duration-500 hover:scale-110"
+                            className="w-full h-full object-cover transition-all duration-500"
                           />
                         </div>
                       ))}
@@ -228,16 +215,18 @@ const ProjectModal = ({
                   </div>
 
                   {/* Project Navigation Footer */}
-                  <div className="mt-16 flex items-center justify-between border-t border-white/10 pt-10">
-                    <div className="flex-1">
+                  <div className="mt-16 flex items-center justify-center gap-48">
+                    <div className="w-max">
                       {prevProject && (
                         <button
                           onClick={() => handleProjectChange(prevProject.id)}
-                          className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-left"
+                          className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-left cursor-pointer"
                         >
-                          <div className="p-2 border border-white/10 bg-white/5 rounded-md group-hover:bg-white/10 transition-colors">
-                            <ChevronLeft size={20} />
-                          </div>
+                          <img
+                            src="assets/previous-project.png"
+                            alt=""
+                            className="w-8 h-8"
+                          />
                           <div>
                             <span className="block text-[10px] uppercase tracking-widest text-white/30 font-consolas">
                               Previous
@@ -249,11 +238,11 @@ const ProjectModal = ({
                         </button>
                       )}
                     </div>
-                    <div className="flex-1 flex justify-end">
+                    <div className="w-max">
                       {nextProject && (
                         <button
                           onClick={() => handleProjectChange(nextProject.id)}
-                          className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-right"
+                          className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-right cursor-pointer"
                         >
                           <div>
                             <span className="block text-[10px] uppercase tracking-widest text-white/30 font-consolas">
@@ -263,9 +252,11 @@ const ProjectModal = ({
                               {nextProject.title}
                             </span>
                           </div>
-                          <div className="p-2 border border-white/10 bg-white/5 rounded-md group-hover:bg-white/10 transition-colors">
-                            <ChevronRight size={20} />
-                          </div>
+                          <img
+                            src="assets/next-project.png"
+                            alt=""
+                            className="w-8 h-8"
+                          />
                         </button>
                       )}
                     </div>
