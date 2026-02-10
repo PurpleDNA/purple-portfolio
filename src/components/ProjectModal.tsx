@@ -10,6 +10,7 @@ interface ProjectModalProps {
   onClose: () => void;
   projectId: string | null;
   onNavigate: (id: string) => void;
+  setCurrentIndex: (index: number) => void;
 }
 
 const ProjectModal = ({
@@ -17,17 +18,24 @@ const ProjectModal = ({
   onClose,
   projectId,
   onNavigate,
+  setCurrentIndex,
 }: ProjectModalProps) => {
   const { play } = useSound("/audio/click-1.mp3");
   const [enlargedIndex, setEnlargedIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Navigation wrapper to reset state correctly
+  /* Navigation wrapper to reset state correctly */
   const handleProjectChange = (id: string) => {
     play();
     setEnlargedIndex(null);
     onNavigate(id);
+
+    // Sync the background index
+    const newIndex = projects.findIndex((p) => p.id === id);
+    if (newIndex !== -1) {
+      setCurrentIndex(newIndex);
+    }
   };
 
   const projectIndex = projects.findIndex((p) => p.id === projectId);
@@ -67,7 +75,7 @@ const ProjectModal = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-100 bg-[#0a0a0a] backdrop-blur-md backdrop-opacity-10"
+          className="fixed inset-0 z-100 bg-[#0a0a0a]/80 backdrop-blur-md"
           onClick={onClose}
         >
           <motion.div
@@ -198,7 +206,7 @@ const ProjectModal = ({
                       {project.images.concat(project.images).map((img, i) => (
                         <div
                           key={i}
-                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-xl overflow-hidden shrink-0 border border-white/5 shadow-2xl cursor-pointer hover:scale-120 transition-all duration-300 hover:mx-10"
+                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-xl overflow-hidden shrink-0 border border-white/5 shadow-2xl cursor-pointer hover:scale-120 delay-100  transition-all duration-300 hover:mx-10"
                           onClick={() => {
                             play();
                             setEnlargedIndex(i % project.images.length);
@@ -207,7 +215,7 @@ const ProjectModal = ({
                           <img
                             src={img}
                             alt=""
-                            className="w-full h-full object-cover transition-all duration-500"
+                            className="w-full h-full object-cover transition-all duration-500 rounded-xl"
                           />
                         </div>
                       ))}
@@ -271,7 +279,7 @@ const ProjectModal = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 z-50 flex items-center justify-center bg-black/95"
+                    className="absolute inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/90 backdrop-blur-xl"
                     onClick={() => setEnlargedIndex(null)}
                   >
                     <button

@@ -13,6 +13,13 @@ interface ProjectProps {
   onClick: () => void;
 }
 
+const scrollToSection = () => {
+  const element = document.getElementById("work");
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "end" });
+  }
+};
+
 const ProjectComponent = ({
   name,
   organization,
@@ -44,6 +51,7 @@ const ProjectComponent = ({
       `}
       onClick={() => {
         play();
+        scrollToSection();
         onClick();
       }}
       onMouseOver={() => setProject()}

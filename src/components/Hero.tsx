@@ -21,7 +21,10 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative min-h-[calc(100vh-80px)] !py-0 flex justify-around section flex-col overflow-hidden backdrop-blur-3xl">
+    <div
+      id="hero"
+      className="relative min-h-[calc(100vh-80px)] !py-0 flex justify-around section flex-col overflow-hidden backdrop-blur-3xl"
+    >
       {/* Top Section */}
       <div className="flex flex-col gap-6 z-10">
         <h2

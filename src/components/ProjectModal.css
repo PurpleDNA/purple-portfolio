@@ -8,7 +8,7 @@
 }
 
 .animate-slide {
-  animation: slide 12s linear infinite;
+  animation: slide 30s linear infinite;
 }
 
 .animate-slide:hover {

@@ -71,6 +71,7 @@ const Projects = () => {
         onClose={() => setIsModalOpen(false)}
         projectId={selectedProjectId}
         onNavigate={(id: string) => setSelectedProjectId(id)}
+        setCurrentIndex={setCurrentIndex}
       />
     </div>
   );

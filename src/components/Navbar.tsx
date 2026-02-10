@@ -10,7 +10,7 @@ const TABS = [
 ];
 
 const Navbar = () => {
-  const [activeTab, setActiveTab] = useState("Work");
+  const [activeTab, setActiveTab] = useState("");
   const { play } = useSound("/audio/click-1.mp3");
 
   const scrollToSection = (id: string, label: string) => {
@@ -32,9 +32,13 @@ const Navbar = () => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const tab = TABS.find((t) => t.id === entry.target.id);
-          if (tab) {
-            setActiveTab(tab.label);
+          if (entry.target.id === "hero") {
+            setActiveTab("");
+          } else {
+            const tab = TABS.find((t) => t.id === entry.target.id);
+            if (tab) {
+              setActiveTab(tab.label);
+            }
           }
         }
       });
@@ -45,10 +49,15 @@ const Navbar = () => {
       observerOptions,
     );
 
+    // Observe all tabs
     TABS.forEach((tab) => {
       const element = document.getElementById(tab.id);
       if (element) observer.observe(element);
     });
+
+    // Also observe hero to clear active tab
+    const heroElement = document.getElementById("hero");
+    if (heroElement) observer.observe(heroElement);
 
     return () => observer.disconnect();
   }, []);
