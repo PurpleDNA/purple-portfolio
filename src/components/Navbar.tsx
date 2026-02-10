@@ -25,17 +25,18 @@ const Navbar = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-20% 0px -70% 0px", // Adjust these values to tune when a section is considered "active"
+      rootMargin: "-30% 0px -30% 0px", // More balanced margin for desktop/mobile
       threshold: 0,
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          if (entry.target.id === "hero") {
+          const id = entry.target.id;
+          if (id === "hero") {
             setActiveTab("");
           } else {
-            const tab = TABS.find((t) => t.id === entry.target.id);
+            const tab = TABS.find((t) => t.id === id);
             if (tab) {
               setActiveTab(tab.label);
             }
@@ -63,9 +64,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <ChamferBox orientation="tl-br" className="bg-[#4A4A4A] p-px flex-none">
-      <div className="chamfer-box tl-br bg-black overflow-hidden">
-        <div className="flex justify-center items-center relative px-20">
+    <ChamferBox
+      orientation="tl-br"
+      className="bg-[#4A4A4A] p-px flex-none w-full lg:w-max"
+    >
+      <div className="w-full chamfer-box tl-br bg-black overflow-hidden">
+        <div className="flex justify-between lg:justify-center items-center relative lg:px-20">
           {TABS.map((tab) => (
             <button
               key={tab.label}

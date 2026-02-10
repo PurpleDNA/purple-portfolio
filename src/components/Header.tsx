@@ -9,7 +9,7 @@ const Header = () => {
     <div className="fixed top-0 left-0 w-full z-100 bg-transparent flex items-center px-[5%] py-4">
       <div className="flex-1" />
       <Navbar />
-      <div className="flex-1 flex justify-end">
+      <div className="flex-1 justify-end hidden lg:flex">
         <ChamferBox
           as="div"
           orientation="tr-bl"

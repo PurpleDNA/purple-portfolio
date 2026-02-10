@@ -109,26 +109,46 @@ const Contact = () => {
             ))}
           </div>
 
-          {/* Resume Button */}
-          <div className="pt-6">
+          {/* Action Buttons */}
+          <div className="pt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
             <ChamferBox<"a">
               as="a"
-              href="#"
+              href="assets/MAROOF_KADIRI_CV.pdf"
               target="_blank"
               orientation="tr-bl"
               hasShadow={true}
               shadowPosition="left"
-              className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out inline-block"
+              className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out inline-block w-40"
             >
-              <a
-                href="assets/MAROOF_KADIRI_CV.pdf"
-                target="_blank"
+              <div
                 onClick={() => playClick1()}
-                className="bg-[#d1d1d1] flex items-center gap-3 px-8 py-3 text-black"
+                className="bg-[#d1d1d1] flex items-center justify-center gap-3 py-3 text-black w-full"
               >
                 <img src="assets/logos/resume.png" alt="" className="w-5 h-5" />
-                <span className="font-consolas font-bold">My Resume</span>
-              </a>
+                <span className="font-consolas font-bold">Resume</span>
+              </div>
+            </ChamferBox>
+
+            <ChamferBox<"a">
+              as="a"
+              href="https://calendly.com/kadirimaroof/30min"
+              target="_blank"
+              orientation="tr-bl"
+              hasShadow={true}
+              shadowPosition="left"
+              className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out inline-block w-40 lg:hidden"
+            >
+              <div
+                onClick={() => playClick1()}
+                className="bg-[#d1d1d1] flex items-center justify-center gap-3 py-3 text-black w-full"
+              >
+                <img
+                  src="assets/logos/calendly.png"
+                  alt=""
+                  className="w-5 h-5"
+                />
+                <span className="font-consolas font-bold">Book Call</span>
+              </div>
             </ChamferBox>
           </div>
         </div>

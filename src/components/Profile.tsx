@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { ChamferBox } from "./ChamferBox";
 import { AnimatedCounter } from "./AnimatedCounter";
 
@@ -24,7 +25,7 @@ const stats = [
 
 const Profile = () => {
   return (
-    <section id="profile" className="section bg-black text-white py-20 pb-0">
+    <section id="profile" className="section bg-black text-white lg:py-20 pb-0">
       <div className="max-w-7xl mx-auto w-full flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* Left Side: Bio & Info - Balanced Width */}
         <div className="flex-1 space-y-12">
@@ -81,27 +82,49 @@ const Profile = () => {
         {/* Right Side: Techstack - Balanced Width & Styled Container (Non-Chamfered) */}
         <div className="flex-1 w-full flex flex-col">
           <div className="w-full bg-[#111111] border border-white/10 p-3 md:p-6 flex flex-col items-center gap-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            <motion.div
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true, amount: 0.1 }}
+              variants={{
+                initial: {},
+                animate: {
+                  transition: {
+                    staggerChildren: 0.05,
+                  },
+                },
+              }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full h-120 lg:h-auto overflow-y-auto lg:overflow-visible white-scrollbar justify-items-center"
+            >
               {techStack.map((tech) => (
-                <ChamferBox
+                <motion.div
                   key={tech.name}
-                  className="w-full h-20 bg-linear-to-br from-[#1a1a1a] to-[#0a0a0a] border border-white/10 hover:border-white/20 transition-all flex items-center px-6 gap-4"
-                  hasDecoration={true}
-                  orientation="tl-br"
+                  variants={{
+                    initial: { opacity: 0, y: 20 },
+                    animate: { opacity: 1, y: 0 },
+                  }}
+                  className="w-full"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                    <img
-                      src={tech.logo}
-                      alt={tech.name}
-                      className="w-8 h-8 object-contain opacity-90"
-                    />
-                  </div>
-                  <span className="font-consolas text-lg text-gray-200">
-                    {tech.name}
-                  </span>
-                </ChamferBox>
+                  <ChamferBox
+                    key={tech.name}
+                    className="w-full h-20 bg-linear-to-br from-[#1a1a1a] to-[#0a0a0a] border border-white/10 hover:border-white/20 transition-all flex items-center px-6 gap-4"
+                    hasDecoration={true}
+                    orientation="tl-br"
+                  >
+                    <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                      <img
+                        src={tech.logo}
+                        alt={tech.name}
+                        className="w-8 h-8 object-contain opacity-90"
+                      />
+                    </div>
+                    <span className="font-consolas text-lg text-gray-200">
+                      {tech.name}
+                    </span>
+                  </ChamferBox>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             <div className="text-center">
               <span className="text-2xl font-consolas text-gray-600/30 uppercase tracking-[0.4em]">

@@ -185,7 +185,7 @@ const ProjectModal = ({
                       </div>
                     </div>
 
-                    <div className="space-y-10 w-1/3">
+                    <div className="space-y-10 lg:w-1/3">
                       <div>
                         <h3 className="text-lg font-consolas text-white mb-4 border-b border-white/10 pb-2 inline-block">
                           Challenges
@@ -247,7 +247,7 @@ const ProjectModal = ({
                   </div>
 
                   {/* Project Navigation Footer */}
-                  <div className="mt-16 flex items-center justify-center gap-48">
+                  <div className="mt-16 flex items-center justify-between lg:justify-center lg:gap-48">
                     <div className="w-max">
                       {prevProject && (
                         <button
