@@ -1,5 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  X,
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+} from "lucide-react";
 import { projects } from "../data/projects";
 import { useSound } from "../hooks/useSound";
 import { useEffect, useState, useRef } from "react";
@@ -116,11 +122,29 @@ const ProjectModal = ({
                   </button>
 
                   {/* Info Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                  <div className="flex flex-col lg:flex-row justify-between gap-12">
                     <div className="space-y-10">
-                      <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight">
-                        {project.title}
-                      </h1>
+                      {project.link && project.link.trim() !== "" ? (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-4 group/link"
+                        >
+                          <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight relative pb-1">
+                            {project.title}
+                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover/link:w-full" />
+                          </h1>
+                          <ExternalLink
+                            size={28}
+                            className="text-white/30 group-hover/link:text-white transition-colors duration-300"
+                          />
+                        </a>
+                      ) : (
+                        <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight">
+                          {project.title}
+                        </h1>
+                      )}
                       <p className="text-base md:text-lg leading-relaxed max-w-xl">
                         {project.description}
                       </p>
@@ -161,7 +185,7 @@ const ProjectModal = ({
                       </div>
                     </div>
 
-                    <div className="space-y-10">
+                    <div className="space-y-10 w-1/3">
                       <div>
                         <h3 className="text-lg font-consolas text-white mb-4 border-b border-white/10 pb-2 inline-block">
                           Challenges
@@ -172,7 +196,7 @@ const ProjectModal = ({
                               key={i}
                               className="flex gap-3 text-gray-400 text-sm font-satoshi"
                             >
-                              <span className="text-purple-500">•</span>
+                              <span className="text-white">•</span>
                               {c}
                             </li>
                           ))}
@@ -188,7 +212,7 @@ const ProjectModal = ({
                               key={i}
                               className="flex gap-3 text-gray-400 text-sm font-satoshi"
                             >
-                              <span className="text-green-500">•</span>
+                              <span className="text-white">•</span>
                               {s}
                             </li>
                           ))}

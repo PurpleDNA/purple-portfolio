@@ -14,6 +14,7 @@ export interface ProjectDetail {
   challenges: string[];
   solutions: string[];
   images: string[];
+  link?: string;
 }
 
 export const projects: ProjectDetail[] = [
@@ -30,7 +31,7 @@ export const projects: ProjectDetail[] = [
     industry: "Web3, Social, Blockchain",
     technology: ["React", "Web3js", "Tanstack"],
     role: "Frontend Developer",
-    classifications: "Released",
+    classifications: "Beta",
     challenges: [
       "Scattered Web3 Content",
       "No streamlined way to find instructions for Web3 activities",
@@ -54,6 +55,7 @@ export const projects: ProjectDetail[] = [
       "/assets/centrium/profile.png",
       "/assets/centrium/dark-mode.png",
     ],
+    link: "https://centrium-w3.vercel.app/",
   },
   {
     id: "top-special-ops",
@@ -64,7 +66,7 @@ export const projects: ProjectDetail[] = [
     image: "/assets/projects/top-special.png",
     title: "TopSpecial Ops - Bakery",
     description:
-      "An advanced operations management system for a high-volume bakery, streamlining production and delivery workflows.",
+      "A comprehensive business management platform designed for a bread manufacturing business. Its primary goal is to digitize and streamline the tracking of production, sales, customer debts, and operational expenses to enable data-driven decision-making.",
     industry: "Food Tech, Logistics",
     technology: ["Next.js", "Node.js", "PostgreSQL"],
     role: "Lead Fullstack Developer",
@@ -92,6 +94,7 @@ export const projects: ProjectDetail[] = [
       "/assets/top-special/10settings.png",
       "/assets/top-special/11darkmode.png",
     ],
+    link: "",
   },
   {
     id: "purple-combinator",
@@ -102,11 +105,11 @@ export const projects: ProjectDetail[] = [
     image: "/assets/projects/purple-combinator.png",
     title: "Purple Combinator",
     description:
-      "An investment ecosystem connecting early-stage startups with strategic investors and resources.",
+      " A startup directory platform where users can discover, share, and pitch startup ideas, featuring user profiles and a content management system. ",
     industry: "FinTech, VC",
-    technology: ["React", "Supabase", "Tailwind"],
-    role: "Senior Developer",
-    classifications: "Beta",
+    technology: ["React", "Sanity", "Tailwind"],
+    role: "Fullstack Developer",
+    classifications: "Production",
     challenges: [
       "Complex user permission levels",
       "Secure document sharing for due diligence",
@@ -126,6 +129,7 @@ export const projects: ProjectDetail[] = [
       "/assets/purple-combinator/profile.png",
       "/assets/purple-combinator/your-profile.png",
     ],
+    link: "https://yc-directory-82ol.vercel.app/",
   },
   {
     id: "fpl-pulse",
@@ -136,9 +140,9 @@ export const projects: ProjectDetail[] = [
     image: "/assets/projects/fpl-pulse.png",
     title: "FPL Pulse",
     description:
-      "A data-driven analytics dashboard for Fantasy Premier League managers to optimize their team selection.",
+      "Fantasy Premier League (FPL) mini-league tracker. Displays gameweek standings with net points (total points minus transfer costs) for a private league.",
     industry: "Sports Tech, Analytics",
-    technology: ["TypeScript", "React", "Chart.js"],
+    technology: ["TypeScript", "React", "Tanstack"],
     role: "Frontend Engineer",
     classifications: "Released",
     challenges: [
@@ -157,6 +161,7 @@ export const projects: ProjectDetail[] = [
       "/assets/fpl-pulse/gameweek.png",
       "/assets/fpl-pulse/minus.png",
     ],
+    link: "https://fpl-xi.vercel.app/",
   },
   {
     id: "n8n-lead-generation",
@@ -167,7 +172,7 @@ export const projects: ProjectDetail[] = [
     image: "/assets/projects/n8n-leads.png",
     title: "N8N Lead Generation",
     description:
-      "Automated workflow system for capturing, qualifying, and distributing leads across various CRM platforms.",
+      "n8n automation pipeline that scrapes and analyzes private healthcare businesses for website improvement opportunities. Scheduled to run daily, automatically compiling qualified leads into a structured Excel report.",
     industry: "Marketing, Automation",
     technology: ["n8n", "OpenAI", "Zapier"],
     role: "Automation Architect",
@@ -186,6 +191,7 @@ export const projects: ProjectDetail[] = [
       "/assets/projects/n8n-leads.png",
       "/assets/n8n-leads-generator/leads.png",
     ],
+    link: "",
   },
   {
     id: "aguda-partners",
@@ -216,5 +222,6 @@ export const projects: ProjectDetail[] = [
       "/assets/projects/aguda.png",
       "/assets/projects/aguda.png",
     ],
+    link: "https://www.agudapartners.ca",
   },
 ];
