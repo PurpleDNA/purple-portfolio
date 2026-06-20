@@ -27,6 +27,11 @@ const socialLinks = [
     logo: "/assets/logos/github.png",
     url: "https://github.com/PurpleDNA/",
   },
+  {
+    name: "Telegram",
+    logo: "/assets/logos/telegram2.png",
+    url: "https://t.me/mk_bayo/",
+  },
 ];
 
 const Contact = () => {
@@ -70,9 +75,9 @@ const Contact = () => {
               <h3 className="font-consolas text-gray-500 uppercase tracking-widest text-sm">
                 Phone number
               </h3>
-              <p className="font-satoshi text-lg text-gray-200">
+              <a className="transition-all duration-300 ease-in-out hover:border-b hover:border-white cursor-pointer">
                 +234 906 591 9964
-              </p>
+              </a>
             </div>
             <div className="space-y-1">
               <h3 className="font-consolas text-gray-500 uppercase tracking-widest text-sm">
@@ -113,7 +118,7 @@ const Contact = () => {
           <div className="pt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
             <ChamferBox<"a">
               as="a"
-              href="assets/MAROOF_KADIRI_CV.pdf"
+              href="assets/MAROOF_KADIRI_CV_2026.pdf"
               target="_blank"
               orientation="tr-bl"
               hasShadow={true}
@@ -154,13 +159,15 @@ const Contact = () => {
         </div>
 
         {/* Right Side: Profile Image */}
+        {/* <ChamferBox> */}
         <div className="flex-1 w-full max-w-xl">
           <img
             src="assets/kadiri-maroof.png"
             alt="Maroof Kadiri"
-            className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-700"
+            className="w-full h-full object-cover brightness-90  transition-all duration-700"
           />
         </div>
+        {/* </ChamferBox> */}
       </div>
     </section>
   );

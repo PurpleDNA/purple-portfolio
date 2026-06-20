@@ -3,8 +3,9 @@ import { ChamferBox } from "./ChamferBox";
 import { AnimatedCounter } from "./AnimatedCounter";
 
 const techStack = [
-  { name: "Javascript", logo: "/assets/logos/javascript.png" },
+  // { name: "Javascript", logo: "/assets/logos/javascript.png" },
   { name: "Typescript", logo: "/assets/logos/typescript.png" },
+  { name: "Python", logo: "/assets/logos/python.png" },
   { name: "NextJS", logo: "/assets/logos/next.png" },
   { name: "React", logo: "/assets/logos/react.png" },
   { name: "Tailwind CSS", logo: "/assets/logos/tailwindcss.png" },
