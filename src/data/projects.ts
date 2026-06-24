@@ -102,7 +102,7 @@ export const projects: ProjectDetail[] = [
     organization: "Sewing Shop",
     skill: "Fullstack",
     year: "2026",
-    image: "/assets/projects/reefa-sewing-hub.png",
+    image: "/assets/projects/project-reefa.png",
     title: "Reefa Sewing Hub",
     description:
       "A full-featured e-commerce storefront for a one-stop sewing shop, where customers browse products, manage a cart, and check out with bank-transfer payments. Includes a complete admin dashboard for managing products, orders, customers, and inventory.",
@@ -204,7 +204,7 @@ export const projects: ProjectDetail[] = [
     organization: "AI Twitter Bot",
     skill: "Automation",
     year: "2026",
-    image: "/assets/projects/matta4animals.png",
+    image: "/assets/projects/project-m4animals.png",
     title: "Matta4Animals - AI Twitter Bot",
     description:
       "An autonomous Twitter bot that shares educational content about animal welfare, wildlife, and conservation in Nigerian Pidgin English. It fetches real-time stories from RSS feeds, scores them with Gemini AI, and posts informative tweet threads daily.",
