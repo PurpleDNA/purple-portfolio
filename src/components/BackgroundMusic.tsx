@@ -3,6 +3,7 @@ import { Volume2, VolumeX, Play, X } from "lucide-react";
 import { cn } from "../lib/utils";
 import { sfxStore, useSfxEnabled } from "../hooks/useSfx";
 import { useSound } from "../hooks/useSound";
+import { useVibing } from "../hooks/useAudioBus";
 
 // Chamfered speech-bubble with a downward tail on the left (above the play
 // button). Kept as a single clip-path so the glass bg + blur stay continuous
@@ -22,6 +23,28 @@ const BackgroundMusic: React.FC = () => {
   );
   const sfxEnabled = useSfxEnabled();
   const { play: playSfxSample } = useSound("/audio/click-1.mp3");
+
+  // Duck out while a "Vibe with me" preview plays, then resume — but only if we
+  // were actually playing when the vibe started.
+  const vibing = useVibing();
+  const resumeAfterVibe = useRef(false);
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (vibing) {
+      if (!audio.paused) {
+        resumeAfterVibe.current = true;
+        audio.pause();
+        setIsPlaying(false);
+      }
+    } else if (resumeAfterVibe.current) {
+      resumeAfterVibe.current = false;
+      audio
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {});
+    }
+  }, [vibing]);
 
   const toggleSfx = () => {
     const next = !sfxEnabled;
