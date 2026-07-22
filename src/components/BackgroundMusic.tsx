@@ -103,19 +103,19 @@ const BackgroundMusic: React.FC = () => {
       {showSoundHint && !isPlaying && (
         <div className="absolute bottom-full left-0 mb-3 animate-sound-hint-in">
           <div className="animate-sound-hint-bob">
-            {/* white border layer (shows through the inset as a crisp outline) */}
-            <div className="bg-white" style={{ clipPath: BUBBLE_CLIP }}>
-              {/* solid black fill — inset 1.5px reveals the white border (same
-                  construction as the Navbar: border layer + solid inner) */}
+            {/* border layer — same construction as the Navbar: a chamfer layer
+                that peeks out by 1px as the frame around a solid inner fill */}
+            <div className="bg-white/60" style={{ clipPath: BUBBLE_CLIP }}>
+              {/* solid black inner — the 1px inset reveals the border */}
               <div
                 className="relative bg-black"
                 style={{
                   clipPath: BUBBLE_CLIP,
-                  margin: "1.5px",
-                  padding: "18px 32px 28px 18px",
+                  margin: "1px",
+                  padding: "16px 34px 26px 18px",
                 }}
               >
-                <p className="whitespace-nowrap text-[11px] leading-none tracking-wide text-white/90">
+                <p className="whitespace-nowrap font-consolas text-[10px] uppercase leading-none tracking-wider text-white/85">
                   Sounds better with the volume up
                 </p>
                 <button
