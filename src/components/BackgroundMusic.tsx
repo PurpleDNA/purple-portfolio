@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX, Play } from "lucide-react";
+import { Volume2, VolumeX, Play, X } from "lucide-react";
 import { cn } from "../lib/utils";
+
+// Chamfered speech-bubble with a downward tail on the left (above the play
+// button). Kept as a single clip-path so the glass bg + blur stay continuous
+// through the tail. Coordinates leave 10px at the bottom for the tail.
+const BUBBLE_CLIP =
+  "polygon(10px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 10px) calc(100% - 10px), 30px calc(100% - 10px), 22px 100%, 14px calc(100% - 10px), 0 calc(100% - 10px), 0 10px)";
 
 const BackgroundMusic: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -9,6 +15,15 @@ const BackgroundMusic: React.FC = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [showSoundHint, setShowSoundHint] = useState(
+    () => localStorage.getItem("soundHintDismissed") !== "true",
+  );
+
+  const dismissSoundHint = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    localStorage.setItem("soundHintDismissed", "true");
+    setShowSoundHint(false);
+  };
 
   // Fade-in effect
   useEffect(() => {
@@ -83,73 +98,107 @@ const BackgroundMusic: React.FC = () => {
   };
 
   return (
-    <div
-      className={cn(
-        "fixed bottom-8 left-8 z-50 flex items-center gap-3 p-2 rounded-full transition-all duration-500",
-        "bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden",
-        isExpanded ? "w-48" : "w-12",
-      )}
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
-    >
-      <audio ref={audioRef} src="/audio/bg-music-short.mp3" />
-
-      {/* Icon/Button */}
-      <button
-        onClick={togglePlay}
-        className={cn(
-          "w-8 h-8 flex items-center justify-center rounded-full transition-all shrink-0",
-          isPlaying
-            ? "bg-white text-black"
-            : "bg-white/10 text-white hover:bg-white/20",
-        )}
-      >
-        {isPlaying ? (
-          <div className="flex gap-0.5 items-end h-3">
-            <span className="w-0.5 h-full bg-current animate-music-bar-1" />
-            <span className="w-0.5 h-2/3 bg-current animate-music-bar-2" />
-            <span className="w-0.5 h-full bg-current animate-music-bar-3" />
+    <div className="fixed bottom-8 left-8 z-50">
+      {/* Sound hint bubble — nudges toward the play button, dismissible */}
+      {showSoundHint && !isPlaying && (
+        <div className="absolute bottom-full left-0 mb-3 animate-sound-hint-in">
+          <div className="animate-sound-hint-bob">
+            {/* white border layer (shows through the inset as a crisp outline) */}
+            <div className="bg-white" style={{ clipPath: BUBBLE_CLIP }}>
+              {/* solid black fill — inset 1.5px reveals the white border (same
+                  construction as the Navbar: border layer + solid inner) */}
+              <div
+                className="relative bg-black"
+                style={{
+                  clipPath: BUBBLE_CLIP,
+                  margin: "1.5px",
+                  padding: "18px 32px 28px 18px",
+                }}
+              >
+                <p className="whitespace-nowrap text-[11px] leading-none tracking-wide text-white/90">
+                  Sounds better with the volume up
+                </p>
+                <button
+                  onClick={dismissSoundHint}
+                  aria-label="Dismiss sound hint"
+                  className="absolute right-2 top-1.5 text-white/40 transition-colors hover:text-white"
+                >
+                  <X size={12} strokeWidth={2.5} />
+                </button>
+              </div>
+            </div>
           </div>
-        ) : (
-          <Play size={14} fill="currentColor" />
-        )}
-      </button>
+        </div>
+      )}
 
-      {/* Expanded Controls */}
       <div
         className={cn(
-          "flex items-center gap-3 transition-opacity duration-300 w-full",
-          isExpanded ? "opacity-100" : "opacity-0 pointer-events-none",
+          "flex items-center gap-3 p-2 rounded-full transition-all duration-500",
+          "bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden",
+          isExpanded ? "w-48" : "w-12",
         )}
+        onMouseEnter={() => setIsExpanded(true)}
+        onMouseLeave={() => setIsExpanded(false)}
       >
+        <audio ref={audioRef} src="/audio/bg-music-short.mp3" />
+
+        {/* Icon/Button */}
         <button
-          onClick={toggleMute}
-          className="text-white/60 hover:text-white transition-colors"
+          onClick={togglePlay}
+          className={cn(
+            "w-8 h-8 flex items-center justify-center rounded-full transition-all shrink-0",
+            isPlaying
+              ? "bg-white text-black"
+              : "bg-white/10 text-white hover:bg-white/20",
+          )}
         >
-          {isMuted || volume === 0 ? (
-            <VolumeX size={16} />
+          {isPlaying ? (
+            <div className="flex gap-0.5 items-end h-3">
+              <span className="w-0.5 h-full bg-current animate-music-bar-1" />
+              <span className="w-0.5 h-2/3 bg-current animate-music-bar-2" />
+              <span className="w-0.5 h-full bg-current animate-music-bar-3" />
+            </div>
           ) : (
-            <Volume2 size={16} />
+            <Play size={14} fill="currentColor" />
           )}
         </button>
 
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="w-24 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white"
-        />
-      </div>
+        {/* Expanded Controls */}
+        <div
+          className={cn(
+            "flex items-center gap-3 transition-opacity duration-300 w-full",
+            isExpanded ? "opacity-100" : "opacity-0 pointer-events-none",
+          )}
+        >
+          <button
+            onClick={toggleMute}
+            className="text-white/60 hover:text-white transition-colors"
+          >
+            {isMuted || volume === 0 ? (
+              <VolumeX size={16} />
+            ) : (
+              <Volume2 size={16} />
+            )}
+          </button>
 
-      {/* Floating Label (optional) */}
-      {!isExpanded && isPlaying && (
-        <div className="absolute -top-10 left-0 bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] text-white/80 animate-bounce">
-          Music On
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="w-24 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white"
+          />
         </div>
-      )}
+
+        {/* Floating Label (optional) */}
+        {!isExpanded && isPlaying && (
+          <div className="absolute -top-10 left-0 bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] text-white/80 animate-bounce">
+            Music On
+          </div>
+        )}
+      </div>
     </div>
   );
 };
