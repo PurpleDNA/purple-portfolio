@@ -230,7 +230,7 @@ const ProjectModal = ({
                       {project.images.concat(project.images).map((img, i) => (
                         <div
                           key={i}
-                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-xl overflow-hidden shrink-0 border border-white/5 shadow-2xl cursor-pointer hover:scale-120 delay-100  transition-all duration-300 hover:mx-10"
+                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-2xl overflow-hidden shrink-0 border-2 border-white/60 shadow-2xl cursor-pointer hover:scale-120 delay-100  transition-all duration-300 hover:mx-10"
                           onClick={() => {
                             play();
                             setEnlargedIndex(i % project.images.length);
@@ -239,7 +239,7 @@ const ProjectModal = ({
                           <img
                             src={img}
                             alt=""
-                            className="w-full h-full object-cover transition-all duration-500 rounded-xl"
+                            className="w-full h-full object-cover transition-all duration-500 rounded-2xl"
                           />
                         </div>
                       ))}

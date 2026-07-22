@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChamferBox } from "./ChamferBox";
 import { AnimatedCounter } from "./AnimatedCounter";
+import SpotifyNowPlaying from "./SpotifyNowPlaying";
 
 const techStack = [
   // { name: "Javascript", logo: "/assets/logos/javascript.png" },
@@ -56,6 +57,11 @@ const Profile = () => {
               football, and read computer science books to feed that curiosity
               about how things actually work.
             </p>
+          </div>
+
+          {/* Now-playing pill — mobile only (desktop shows it in the header) */}
+          <div className="lg:hidden">
+            <SpotifyNowPlaying />
           </div>
 
           {/* Stats */}

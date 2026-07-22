@@ -75,7 +75,10 @@ const Projects = () => {
             />
           ))}
         </div>
-        <div className="w-1/2 overflow-hidden aspect-square relative shrink-0">
+        <div
+          className="w-1/2 overflow-hidden aspect-square relative shrink-0 cursor-pointer"
+          onClick={() => handleProjectClick(projects[currentIndex].id)}
+        >
           <motion.div
             className="absolute inset-0 w-full h-full"
             animate={{ y: `-${currentIndex * 100}%` }}
