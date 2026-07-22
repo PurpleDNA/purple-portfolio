@@ -4,7 +4,7 @@ import BackgroundMusic from "./components/BackgroundMusic";
 import Projects from "./components/Projects";
 import Profile from "./components/Profile";
 import Contact from "./components/Contact";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
