@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause } from "lucide-react";
+import { audioBus } from "../hooks/useAudioBus";
 
 interface NowPlaying {
   isPlaying: boolean;
@@ -54,6 +55,7 @@ const SpotifyNowPlaying = () => {
     // Reset playback state for the new song.
     if (audioRef.current) audioRef.current.pause();
     setIsVibing(false);
+    audioBus.setVibing(false);
     setPreviewUrl(null);
 
     if (!songKey || !data) return;
@@ -85,10 +87,15 @@ const SpotifyNowPlaying = () => {
     if (isVibing) {
       audio.pause();
       setIsVibing(false);
+      audioBus.setVibing(false);
     } else {
       audio.currentTime = 0;
-      audio.play().catch(() => setIsVibing(false));
+      audio.play().catch(() => {
+        setIsVibing(false);
+        audioBus.setVibing(false);
+      });
       setIsVibing(true);
+      audioBus.setVibing(true);
     }
   };
 
@@ -154,7 +161,10 @@ const SpotifyNowPlaying = () => {
         <audio
           ref={audioRef}
           src={previewUrl}
-          onEnded={() => setIsVibing(false)}
+          onEnded={() => {
+            setIsVibing(false);
+            audioBus.setVibing(false);
+          }}
         />
       )}
     </div>
