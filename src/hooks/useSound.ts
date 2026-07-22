@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
+import { sfxStore } from "./useSfx";
 
 export const useSound = (url: string) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -19,6 +20,8 @@ export const useSound = (url: string) => {
   }, [url]);
 
   const play = useCallback(() => {
+    // Respect the global SFX toggle.
+    if (!sfxStore.get()) return;
     if (audioRef.current) {
       // Reset to beginning if already playing
       audioRef.current.currentTime = 0;

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, Play, X } from "lucide-react";
 import { cn } from "../lib/utils";
+import { sfxStore, useSfxEnabled } from "../hooks/useSfx";
+import { useSound } from "../hooks/useSound";
 
 // Chamfered speech-bubble with a downward tail on the left (above the play
 // button). Kept as a single clip-path so the glass bg + blur stay continuous
@@ -16,13 +18,28 @@ const BackgroundMusic: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showSoundHint, setShowSoundHint] = useState(
-    () => localStorage.getItem("soundHintDismissed") !== "true",
+    () => sessionStorage.getItem("soundHintDismissed") !== "true",
   );
+  const sfxEnabled = useSfxEnabled();
+  const { play: playSfxSample } = useSound("/audio/click-1.mp3");
+
+  const toggleSfx = () => {
+    const next = !sfxEnabled;
+    sfxStore.set(next);
+    // Play a sample only when switching on, so it's silent when muting.
+    if (next) playSfxSample();
+  };
+
+  // Retire the hint for good — used by the X button and by the first play click,
+  // so once they've engaged the button once it won't pop up again.
+  const hideSoundHint = () => {
+    sessionStorage.setItem("soundHintDismissed", "true");
+    setShowSoundHint(false);
+  };
 
   const dismissSoundHint = (e: React.MouseEvent) => {
     e.stopPropagation();
-    localStorage.setItem("soundHintDismissed", "true");
-    setShowSoundHint(false);
+    hideSoundHint();
   };
 
   // Fade-in effect
@@ -78,6 +95,7 @@ const BackgroundMusic: React.FC = () => {
         audioRef.current.play();
       }
       setIsPlaying(!isPlaying);
+      hideSoundHint();
     }
   };
 
@@ -133,9 +151,9 @@ const BackgroundMusic: React.FC = () => {
 
       <div
         className={cn(
-          "flex items-center gap-3 p-2 rounded-full transition-all duration-500",
+          "flex items-center gap-3 p-2 transition-all duration-500",
           "bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden",
-          isExpanded ? "w-48" : "w-12",
+          isExpanded ? "w-56 rounded-2xl" : "w-12 rounded-full",
         )}
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
@@ -163,33 +181,65 @@ const BackgroundMusic: React.FC = () => {
           )}
         </button>
 
-        {/* Expanded Controls */}
+        {/* Expanded Controls — stacks the volume row and the SFX toggle row.
+            max-h collapses to 0 when idle so the pill stays a clean circle. */}
         <div
           className={cn(
-            "flex items-center gap-3 transition-opacity duration-300 w-full",
-            isExpanded ? "opacity-100" : "opacity-0 pointer-events-none",
+            "flex flex-col gap-2 w-full overflow-hidden transition-all duration-300",
+            isExpanded
+              ? "max-h-24 opacity-100"
+              : "max-h-0 opacity-0 pointer-events-none",
           )}
         >
-          <button
-            onClick={toggleMute}
-            className="text-white/60 hover:text-white transition-colors"
-          >
-            {isMuted || volume === 0 ? (
-              <VolumeX size={16} />
-            ) : (
-              <Volume2 size={16} />
-            )}
-          </button>
+          {/* Row 1 — volume */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleMute}
+              className="text-white/60 hover:text-white transition-colors shrink-0"
+            >
+              {isMuted || volume === 0 ? (
+                <VolumeX size={16} />
+              ) : (
+                <Volume2 size={16} />
+              )}
+            </button>
 
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="w-24 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white"
-          />
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white"
+            />
+          </div>
+
+          {/* Row 2 — sound effects toggle */}
+          <div className="flex items-center justify-between gap-3">
+            <span className="font-consolas text-[9px] uppercase tracking-wider text-white/60 whitespace-nowrap">
+              Sound FX
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sfxEnabled}
+              aria-label="Toggle sound effects"
+              onClick={toggleSfx}
+              className={cn(
+                "relative h-5 w-9 shrink-0 rounded-full transition-colors duration-200",
+                sfxEnabled ? "bg-white/45" : "bg-white/10",
+              )}
+            >
+              {/* one constant white knob — only its position changes */}
+              <span
+                className={cn(
+                  "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-all duration-200",
+                  sfxEnabled ? "left-[18px]" : "left-0.5",
+                )}
+              />
+            </button>
+          </div>
         </div>
 
         {/* Floating Label (optional) */}
