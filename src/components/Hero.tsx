@@ -1,12 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import Typewriter from "./Typewriter";
 
+const REAL_NAME = "KADIRI MAROOF AKINBAYODE";
+const CODENAME = "CODENAME: PURPLE DNA";
+
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [targetText, setTargetText] = useState("KADIRI MAROOF AKINBAYODE");
+  const [targetText, setTargetText] = useState(REAL_NAME);
   const [isHovered, setIsHovered] = useState(false);
+  // The "hover to decode" prompt is retired for the session once they hover.
+  const [showDecodeHint, setShowDecodeHint] = useState(
+    () => sessionStorage.getItem("decodeHintDismissed") !== "true",
+  );
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const userInteractedRef = useRef(false);
+  const demoRevertRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const dismissDecodeHint = () => {
+    sessionStorage.setItem("decodeHintDismissed", "true");
+    setShowDecodeHint(false);
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -20,6 +34,30 @@ const Hero = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  // One-time teaser: shortly after load, auto-play the name/helix effect once
+  // and then revert — so visitors learn the name is interactive. The blinking
+  // "hover to decode" prompt then invites them to try it themselves. Skipped if
+  // they've already discovered it this session (or hover before it fires).
+  useEffect(() => {
+    if (sessionStorage.getItem("decodeHintDismissed") === "true") return;
+
+    const startTimer = setTimeout(() => {
+      if (userInteractedRef.current) return;
+      setTargetText(CODENAME);
+      setIsHovered(true);
+      demoRevertRef.current = setTimeout(() => {
+        if (userInteractedRef.current) return;
+        setTargetText(REAL_NAME);
+        setIsHovered(false);
+      }, 2200);
+    }, 3000);
+
+    return () => {
+      clearTimeout(startTimer);
+      if (demoRevertRef.current) clearTimeout(demoRevertRef.current);
+    };
+  }, []);
+
   return (
     <div
       id="hero"
@@ -27,32 +65,51 @@ const Hero = () => {
     >
       {/* Top Section */}
       <div className="flex flex-col gap-6 z-10">
-        <h2
-          className={`font-consolas text-lg md:text-xl text-white tracking-[0.2em] uppercase group py-3 w-1/2 transition-all duration-300 ease-in-out ${isHovered ? "border-y cursor-crosshair border-white" : ""}`}
-          onMouseEnter={() => {
-            if (leaveTimeoutRef.current) {
-              clearTimeout(leaveTimeoutRef.current);
-              leaveTimeoutRef.current = null;
-            }
-            hoverTimeoutRef.current = setTimeout(() => {
-              setTargetText("CODENAME: PURPLE DNA");
-              setIsHovered(true);
-            }, 250);
-          }}
-          onMouseLeave={() => {
-            if (hoverTimeoutRef.current) {
-              clearTimeout(hoverTimeoutRef.current);
-              hoverTimeoutRef.current = null;
-            }
+        <div className="flex flex-col gap-1 w-1/2">
+          <h2
+            className={`font-consolas text-lg md:text-xl text-white tracking-[0.2em] uppercase group py-3 w-full transition-all duration-300 ease-in-out ${isHovered ? "border-y cursor-crosshair border-white" : ""}`}
+            onMouseEnter={() => {
+              // A real hover cancels the teaser, retires the hint, and takes over.
+              userInteractedRef.current = true;
+              dismissDecodeHint();
+              if (demoRevertRef.current) {
+                clearTimeout(demoRevertRef.current);
+                demoRevertRef.current = null;
+              }
+              if (leaveTimeoutRef.current) {
+                clearTimeout(leaveTimeoutRef.current);
+                leaveTimeoutRef.current = null;
+              }
+              hoverTimeoutRef.current = setTimeout(() => {
+                setTargetText(CODENAME);
+                setIsHovered(true);
+              }, 250);
+            }}
+            onMouseLeave={() => {
+              if (hoverTimeoutRef.current) {
+                clearTimeout(hoverTimeoutRef.current);
+                hoverTimeoutRef.current = null;
+              }
 
-            leaveTimeoutRef.current = setTimeout(() => {
-              setTargetText("KADIRI MAROOF AKINBAYODE");
-              setIsHovered(false);
-            }, 250);
-          }}
-        >
-          <Typewriter text={targetText} speed={50} eraseSpeed={20} />
-        </h2>
+              leaveTimeoutRef.current = setTimeout(() => {
+                setTargetText(REAL_NAME);
+                setIsHovered(false);
+              }, 250);
+            }}
+          >
+            <Typewriter text={targetText} speed={50} eraseSpeed={20} />
+          </h2>
+
+          {/* Discoverability hint — a dim terminal prompt that blinks, telling
+              visitors the name responds to hover. Hidden while the effect is
+              active, and gone for good once they've hovered this session. */}
+          <span
+            className={`font-consolas text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/40 transition-opacity duration-300 ${showDecodeHint && !isHovered ? "opacity-100" : "opacity-0"}`}
+          >
+            <span className="text-white/60">&#9656;</span> hover name to decode
+            <span className="animate-blink">_</span>
+          </span>
+        </div>
 
         <div className="flex items-center gap-3 font-consolas text-[11px] md:text-sm text-[#0EC126] uppercase tracking-wider">
           <div className="w-8 h-8 relative">
