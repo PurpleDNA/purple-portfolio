@@ -1,5 +1,6 @@
 import { ChamferBox } from "./ChamferBox";
 import Navbar from "./Navbar";
+import SpotifyNowPlaying from "./SpotifyNowPlaying";
 import { useSound } from "../hooks/useSound";
 
 const Header = () => {
@@ -7,7 +8,9 @@ const Header = () => {
 
   return (
     <div className="fixed top-0 left-0 w-full z-100 bg-transparent flex items-center px-[5%] py-4">
-      <div className="flex-1" />
+      <div className="flex-1 hidden lg:flex">
+        <SpotifyNowPlaying />
+      </div>
       <Navbar />
       <div className="flex-1 justify-end hidden lg:flex">
         <ChamferBox
