@@ -4,10 +4,12 @@ import BackgroundMusic from "./components/BackgroundMusic";
 import Projects from "./components/Projects";
 import Profile from "./components/Profile";
 import Contact from "./components/Contact";
+import { Analytics } from "@vercel/analytics/next";
 
 function App() {
   return (
     <div className="min-h-screen bg-black font-satoshi text-white selection:bg-white selection:text-black">
+      <Analytics />
       <BackgroundMusic />
       <Header />
       <div className="pt-20">
