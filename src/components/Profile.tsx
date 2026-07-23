@@ -36,7 +36,7 @@ const Profile = () => {
               My Profile
             </h2>
             <p className="font-satoshi text-gray-300 leading-relaxed">
-              Hi, I'm Maroof Kadiri, I'm a frontend developer with 3 years of
+              Hi, I'm Maroof Kadiri, I'm a frontend developer with 4 years of
               experience building modern, scalable web applications with unique
               interfaces and engaging user experiences. I have a natural
               curiosity for technology and how things work—the why behind what

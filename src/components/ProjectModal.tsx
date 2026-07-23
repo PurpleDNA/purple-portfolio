@@ -29,16 +29,51 @@ const ProjectModal = ({
   const { play } = useSound("/audio/click-1.mp3");
   const [enlargedIndex, setEnlargedIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
+  const [projectDirection, setProjectDirection] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Track touch start position for swipe gestures
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+
+  // Detects a swipe and fires the matching callback.
+  // Horizontal swipes win over vertical ones so normal scrolling still works;
+  // onDown (optional) fires only on a downward swipe.
+  const handleSwipe = (
+    e: React.TouchEvent,
+    onLeft: () => void,
+    onRight: () => void,
+    onDown?: () => void,
+  ) => {
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) onLeft();
+      else onRight();
+    } else if (onDown && dy > 50) {
+      onDown();
+    }
+  };
 
   /* Navigation wrapper to reset state correctly */
   const handleProjectChange = (id: string) => {
+    const newIndex = projects.findIndex((p) => p.id === id);
+    // Slide direction: forward (1) when moving to a later project, back (-1) otherwise
+    if (newIndex !== -1) {
+      setProjectDirection(newIndex > projectIndex ? 1 : -1);
+    }
     play();
     setEnlargedIndex(null);
     onNavigate(id);
 
     // Sync the background index
-    const newIndex = projects.findIndex((p) => p.id === id);
     if (newIndex !== -1) {
       setCurrentIndex(newIndex);
     }
@@ -61,6 +96,14 @@ const ProjectModal = ({
       (enlargedIndex + newDir + project.images.length) % project.images.length;
     setEnlargedIndex(newIndex);
   };
+
+  // Reset scroll to top whenever the project changes (the container no longer
+  // remounts, so scroll position would otherwise carry over between projects)
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [projectId]);
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -96,215 +139,265 @@ const ProjectModal = ({
             <div className="relative w-full h-full overflow-hidden">
               {/* 1. Scrollable Content Area */}
               <div
-                key={projectId}
                 ref={scrollContainerRef}
-                className={`w-full h-screen p-6 md:p-10 custom-scrollbar ${
-                  enlargedIndex !== null ? "overflow-hidden" : "overflow-y-auto"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) =>
+                  handleSwipe(
+                    e,
+                    () => nextProject && handleProjectChange(nextProject.id),
+                    () => prevProject && handleProjectChange(prevProject.id),
+                  )
+                }
+                className={`w-full h-[100dvh] p-6 md:p-10 pb-[calc(2rem+env(safe-area-inset-bottom))] custom-scrollbar overflow-x-hidden ${
+                  enlargedIndex !== null
+                    ? "overflow-y-hidden"
+                    : "overflow-y-auto"
                 }`}
               >
-                {/* Content Wrapper (Fades out when enlarged) */}
-                <div
-                  className={`transition-opacity duration-300 ${enlargedIndex !== null ? "opacity-0 pointer-events-none" : "opacity-100"}`}
-                >
-                  {/* Back Button */}
-                  <button
-                    onClick={() => {
-                      play();
-                      onClose();
+                {/* Content Wrapper (Slides between projects) */}
+                <AnimatePresence mode="wait" custom={projectDirection}>
+                  <motion.div
+                    key={projectId}
+                    custom={projectDirection}
+                    variants={{
+                      enter: (d: number) => ({
+                        x: d > 0 ? "100%" : "-100%",
+                        opacity: 0,
+                      }),
+                      center: { x: 0, opacity: 1 },
+                      exit: (d: number) => ({
+                        x: d < 0 ? "100%" : "-100%",
+                        opacity: 0,
+                      }),
                     }}
-                    className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-12 group"
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "spring", stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 },
+                    }}
+                    className={
+                      enlargedIndex !== null ? "pointer-events-none" : ""
+                    }
                   >
-                    <ArrowLeft
-                      size={18}
-                      className="group-hover:-translate-x-1 transition-transform"
-                    />
-                    <span className="font-consolas text-sm">Go Back</span>
-                  </button>
-
-                  {/* Info Grid */}
-                  <div className="flex flex-col lg:flex-row justify-between gap-12">
-                    <div className="space-y-10">
-                      {project.link && project.link.trim() !== "" ? (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-4 group/link"
-                        >
-                          <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight relative pb-1">
-                            {project.title}
-                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover/link:w-full" />
-                          </h1>
-                          <ExternalLink
-                            size={28}
-                            className="text-white/30 group-hover/link:text-white transition-colors duration-300"
-                          />
-                        </a>
-                      ) : (
-                        <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight">
-                          {project.title}
-                        </h1>
-                      )}
-                      <p className="text-base md:text-lg leading-relaxed max-w-xl">
-                        {project.description}
-                      </p>
-
-                      <div className="grid grid-cols-2 gap-8">
-                        <div>
-                          <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
-                            Industry
-                          </h3>
-                          <p className="text-gray-200 text-sm font-satoshi">
-                            {project.industry}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
-                            Classification
-                          </h3>
-                          <p className="text-gray-200 text-sm font-satoshi">
-                            {project.classifications}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
-                            Technology
-                          </h3>
-                          <p className="text-gray-200 text-sm font-satoshi">
-                            {project.technology.join(", ")}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-xs font-consolas  mb-2 uppercase tracking-widest font-semibold">
-                            Role
-                          </h3>
-                          <p className="text-gray-200 text-sm font-satoshi">
-                            {project.role}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-10 lg:w-1/3">
-                      <div>
-                        <h3 className="text-lg font-consolas text-white mb-4 border-b border-white/10 pb-2 inline-block">
-                          Challenges
-                        </h3>
-                        <ul className="space-y-3">
-                          {project.challenges.map((c, i) => (
-                            <li
-                              key={i}
-                              className="flex gap-3 text-gray-400 text-sm font-satoshi"
-                            >
-                              <span className="text-white">•</span>
-                              {c}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-consolas text-white mb-4 border-b border-white/10 pb-2 inline-block">
-                          Solution
-                        </h3>
-                        <ul className="space-y-3">
-                          {project.solutions.map((s, i) => (
-                            <li
-                              key={i}
-                              className="flex gap-3 text-gray-400 text-sm font-satoshi"
-                            >
-                              <span className="text-white">•</span>
-                              {s}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Image Slider */}
-                  <div className="mt-20 relative overflow-hidden rounded-2xl bg-transparent py-8 group/slider">
-                    <div
-                      className="flex gap-6 whitespace-nowrap animate-slide"
-                      style={{ width: "fit-content" }}
+                    {/* Back Button */}
+                    <button
+                      onClick={() => {
+                        play();
+                        onClose();
+                      }}
+                      className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-12 group"
                     >
-                      {project.images.concat(project.images).map((img, i) => (
-                        <div
-                          key={i}
-                          className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-2xl overflow-hidden shrink-0 border-2 border-white/60 shadow-2xl cursor-pointer hover:scale-120 delay-100  transition-all duration-300 hover:mx-10"
-                          onClick={() => {
-                            play();
-                            setEnlargedIndex(i % project.images.length);
-                          }}
-                        >
-                          <img
-                            src={img}
-                            alt=""
-                            className="w-full h-full object-cover transition-all duration-500 rounded-2xl"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                      <ArrowLeft
+                        size={18}
+                        className="group-hover:-translate-x-1 transition-transform"
+                      />
+                      <span className="font-consolas text-sm">Go Back</span>
+                    </button>
 
-                  {/* Project Navigation Footer */}
-                  <div className="mt-16 flex items-center justify-between lg:justify-center lg:gap-48">
-                    <div className="w-max">
-                      {prevProject && (
-                        <button
-                          onClick={() => handleProjectChange(prevProject.id)}
-                          className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-left cursor-pointer"
-                        >
-                          <img
-                            src="assets/previous-project.png"
-                            alt=""
-                            className="w-8 h-8"
-                          />
+                    {/* Info Grid */}
+                    <div className="flex flex-col lg:flex-row justify-between gap-12">
+                      <div className="space-y-10">
+                        {project.link && project.link.trim() !== "" ? (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-4 group/link"
+                          >
+                            <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight relative pb-1">
+                              {project.title}
+                              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover/link:w-full" />
+                            </h1>
+                            <ExternalLink
+                              size={28}
+                              className="text-white/30 group-hover/link:text-white transition-colors duration-300"
+                            />
+                          </a>
+                        ) : (
+                          <h1 className="text-3xl md:text-5xl font-consolas font-bold leading-tight">
+                            {project.title}
+                          </h1>
+                        )}
+                        <p className="text-base md:text-lg leading-relaxed max-w-xl">
+                          {project.description}
+                        </p>
+
+                        <div className="grid grid-cols-2 gap-8">
                           <div>
-                            <span className="block text-[10px] uppercase tracking-widest text-white/30 font-consolas">
-                              Previous
-                            </span>
-                            <span className="font-satoshi text-sm md:text-base font-semibold">
-                              {prevProject.title}
-                            </span>
+                            <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
+                              Industry
+                            </h3>
+                            <p className="text-gray-200 text-sm font-satoshi">
+                              {project.industry}
+                            </p>
                           </div>
-                        </button>
-                      )}
-                    </div>
-                    <div className="w-max">
-                      {nextProject && (
-                        <button
-                          onClick={() => handleProjectChange(nextProject.id)}
-                          className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-right cursor-pointer"
-                        >
                           <div>
-                            <span className="block text-[10px] uppercase tracking-widest text-white/30 font-consolas">
-                              Next
-                            </span>
-                            <span className="font-satoshi text-sm md:text-base font-semibold">
-                              {nextProject.title}
-                            </span>
+                            <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
+                              Classification
+                            </h3>
+                            <p className="text-gray-200 text-sm font-satoshi">
+                              {project.classifications}
+                            </p>
                           </div>
-                          <img
-                            src="assets/next-project.png"
-                            alt=""
-                            className="w-8 h-8"
-                          />
-                        </button>
-                      )}
+                          <div>
+                            <h3 className="text-xs font-consolas mb-2 uppercase tracking-widest font-semibold">
+                              Technology
+                            </h3>
+                            <p className="text-gray-200 text-sm font-satoshi">
+                              {project.technology.join(", ")}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-xs font-consolas  mb-2 uppercase tracking-widest font-semibold">
+                              Role
+                            </h3>
+                            <p className="text-gray-200 text-sm font-satoshi">
+                              {project.role}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-10 lg:w-1/3">
+                        <div>
+                          <h3 className="text-lg font-consolas text-white mb-4 border-b border-white/10 pb-2 inline-block">
+                            Challenges
+                          </h3>
+                          <ul className="space-y-3">
+                            {project.challenges.map((c, i) => (
+                              <li
+                                key={i}
+                                className="flex gap-3 text-gray-400 text-sm font-satoshi"
+                              >
+                                <span className="text-white">•</span>
+                                {c}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-consolas text-white mb-4 border-b border-white/10 pb-2 inline-block">
+                            Solution
+                          </h3>
+                          <ul className="space-y-3">
+                            {project.solutions.map((s, i) => (
+                              <li
+                                key={i}
+                                className="flex gap-3 text-gray-400 text-sm font-satoshi"
+                              >
+                                <span className="text-white">•</span>
+                                {s}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+
+                    {/* Image Slider */}
+                    <div className="mt-20 relative overflow-hidden rounded-2xl bg-transparent py-8 group/slider">
+                      <div
+                        className="flex gap-6 whitespace-nowrap animate-slide"
+                        style={{ width: "fit-content" }}
+                      >
+                        {project.images.concat(project.images).map((img, i) => (
+                          <div
+                            key={i}
+                            className="w-72 md:w-96 h-48 md:h-64 bg-gray-900 rounded-2xl overflow-hidden shrink-0 border-2 border-white/60 shadow-2xl cursor-pointer hover:scale-120 delay-100  transition-all duration-300 hover:mx-10"
+                            onClick={() => {
+                              play();
+                              setEnlargedIndex(i % project.images.length);
+                            }}
+                          >
+                            <img
+                              src={img}
+                              alt=""
+                              className="w-full h-full object-cover transition-all duration-500 rounded-2xl"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Project Navigation Footer */}
+                    <div className="mt-16 flex items-center justify-between lg:justify-center lg:gap-48">
+                      <div className="w-max">
+                        {prevProject && (
+                          <button
+                            onClick={() => handleProjectChange(prevProject.id)}
+                            className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-left cursor-pointer"
+                          >
+                            <img
+                              src="assets/previous-project.png"
+                              alt=""
+                              className="w-8 h-8"
+                            />
+                            <div>
+                              <span className="block text-[10px] uppercase tracking-widest text-white/30 font-consolas">
+                                Previous
+                              </span>
+                              <span className="font-satoshi text-sm md:text-base font-semibold">
+                                {prevProject.title}
+                              </span>
+                            </div>
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-max">
+                        {nextProject && (
+                          <button
+                            onClick={() => handleProjectChange(nextProject.id)}
+                            className="flex items-center gap-4 text-gray-500 hover:text-white transition-colors group text-right cursor-pointer"
+                          >
+                            <div>
+                              <span className="block text-[10px] uppercase tracking-widest text-white/30 font-consolas">
+                                Next
+                              </span>
+                              <span className="font-satoshi text-sm md:text-base font-semibold">
+                                {nextProject.title}
+                              </span>
+                            </div>
+                            <img
+                              src="assets/next-project.png"
+                              alt=""
+                              className="w-8 h-8"
+                            />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
               {/* 2. Enlarged Image Lightbox - Siblings to the scroll area */}
-              <AnimatePresence mode="wait" custom={direction}>
+              <AnimatePresence>
                 {enlargedIndex !== null && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
                     className="absolute inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/90 backdrop-blur-xl"
                     onClick={() => setEnlargedIndex(null)}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={(e) =>
+                      handleSwipe(
+                        e,
+                        () => navigateImage("next"),
+                        () => navigateImage("prev"),
+                        () => {
+                          play();
+                          // Defer the unmount out of the touch handler — updating
+                          // state synchronously inside touchend interrupts framer's
+                          // exit animation and leaves the overlay stuck (opacity 0,
+                          // pointer-events auto), silently blocking all later touches.
+                          requestAnimationFrame(() => setEnlargedIndex(null));
+                        },
+                      )
+                    }
                   >
                     <button
                       onClick={(e) => {
@@ -347,14 +440,9 @@ const ProjectModal = ({
                             opacity: 0,
                           }),
                           center: { x: 0, opacity: 1 },
-                          exit: (d: number) => ({
-                            x: d < 0 ? "100%" : "-100%",
-                            opacity: 0,
-                          }),
                         }}
                         initial="enter"
                         animate="center"
-                        exit="exit"
                         transition={{
                           x: { type: "spring", stiffness: 300, damping: 30 },
                           opacity: { duration: 0.2 },

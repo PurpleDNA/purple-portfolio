@@ -65,8 +65,9 @@ const Contact = () => {
               Contact Me
             </h2>
             <p className="font-satoshi text-gray-400 leading-relaxed max-w-md">
-              I am open to remote & on-site fulltime, part-time, and contract
-              web development opportunities. Let's work together.
+              I am open to remote and on-site software development
+              opportunities, including full-time, part-time, and contract roles.
+              Let's work together.
             </p>
           </div>
 
