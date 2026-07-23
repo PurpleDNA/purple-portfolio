@@ -161,22 +161,19 @@ const ProjectModal = ({
                     custom={projectDirection}
                     variants={{
                       enter: (d: number) => ({
-                        x: d > 0 ? "100%" : "-100%",
+                        x: d > 0 ? "40%" : "-40%",
                         opacity: 0,
                       }),
                       center: { x: 0, opacity: 1 },
                       exit: (d: number) => ({
-                        x: d < 0 ? "100%" : "-100%",
+                        x: d < 0 ? "40%" : "-40%",
                         opacity: 0,
                       }),
                     }}
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{
-                      x: { type: "spring", stiffness: 300, damping: 30 },
-                      opacity: { duration: 0.2 },
-                    }}
+                    transition={{ duration: 0.18, ease: "easeInOut" }}
                     className={
                       enlargedIndex !== null ? "pointer-events-none" : ""
                     }
