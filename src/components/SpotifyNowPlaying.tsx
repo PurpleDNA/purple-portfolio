@@ -11,8 +11,8 @@ interface NowPlaying {
 }
 
 // Poll the serverless proxy periodically. Kept modest so we stay well within
-// Spotify's rate limits (the function also caches for 30s at the edge).
-const POLL_MS = 30_000;
+// Spotify's rate limits (the function also caches for 10s at the edge).
+const POLL_MS = 12_000;
 
 const SpotifyNowPlaying = () => {
   const [data, setData] = useState<NowPlaying | null>(null);

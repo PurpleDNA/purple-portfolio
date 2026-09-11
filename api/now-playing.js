@@ -33,11 +33,12 @@ async function getAccessToken() {
 }
 
 export default async function handler(_req, res) {
-  // Cache at the edge for 30s so we never hammer Spotify's rate limits, even
-  // with many visitors polling.
+  // Cache at the edge for 10s so we never hammer Spotify's rate limits, even
+  // with many visitors polling. Kept below the client's 12s poll so each poll
+  // can actually pick up a track change.
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=30, stale-while-revalidate=30",
+    "public, s-maxage=10, stale-while-revalidate=20",
   );
 
   try {
