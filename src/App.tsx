@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import BackgroundMusic from "./components/BackgroundMusic";
 import Projects from "./components/Projects";
 import Profile from "./components/Profile";
+import GithubContributions from "./components/GithubContributions";
 import Contact from "./components/Contact";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -16,6 +17,7 @@ function App() {
         <Hero />
         <Projects />
         <Profile />
+        <GithubContributions />
         <Contact />
       </div>
     </div>

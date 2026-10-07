@@ -193,9 +193,8 @@ export const projects: ProjectDetail[] = [
     ],
     images: [
       "/assets/fpl-pulse/home.png",
-      "/assets/fpl-pulse/list.png",
+      "/assets/fpl-pulse/league.png",
       "/assets/fpl-pulse/gameweek.png",
-      "/assets/fpl-pulse/minus.png",
     ],
     link: "https://fpl-xi.vercel.app/",
   },
