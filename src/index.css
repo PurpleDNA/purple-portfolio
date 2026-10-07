@@ -348,6 +348,24 @@ html {
     scrollbar-width: none;
   }
 
+  /* GitHub graph: dim until hovered. Touch screens can't hover, so they
+     always get the vibrant version. */
+  .gh-graph {
+    transition:
+      opacity 0.5s ease-out,
+      filter 0.5s ease-out;
+  }
+  @media (hover: hover) {
+    .gh-graph {
+      opacity: 0.35;
+      filter: saturate(0.5);
+    }
+    .group:hover .gh-graph {
+      opacity: 1;
+      filter: saturate(1.5) brightness(1.1);
+    }
+  }
+
   .white-scrollbar {
     scrollbar-width: auto;
     scrollbar-color: white rgba(255, 255, 255, 0.1);
