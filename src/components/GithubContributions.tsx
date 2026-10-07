@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { AnimatedCounter } from "./AnimatedCounter";
 
 type Day = { date: string; level: number; count: number };
 type Calendar = { username: string; total: number; days: Day[] };
@@ -14,8 +15,18 @@ const levelColors = [
 ];
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 const formatDate = (iso: string) => {
@@ -90,7 +101,7 @@ const GithubContributions = () => {
             </h2>
             <p className="font-satoshi text-gray-400 leading-relaxed">
               <span className="text-white font-bold">
-                {data.total.toLocaleString()}
+                <AnimatedCounter value={data.total.toLocaleString()} />
               </span>{" "}
               contributions in the last year
             </p>
@@ -106,51 +117,60 @@ const GithubContributions = () => {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
-          className="w-full bg-[#111111] border border-white/10 p-4 md:p-6"
+          initial={{ opacity: 0, y: 60, scale: 0.92 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="group w-full bg-[#111111] border border-white/10 p-4 md:p-6 transition-colors duration-500 hover:border-[#0EC126]/30"
         >
-          <div ref={scrollRef} className="overflow-x-auto no-scrollbar">
-            <div className="flex flex-col gap-2 min-w-[720px]">
-              {/* Month labels */}
-              <div className="flex gap-[3px] font-consolas text-[10px] text-gray-500">
-                {monthLabels.map((label, i) => (
-                  <div key={i} className="flex-1 min-w-0 overflow-visible">
-                    <span className="whitespace-nowrap">{label}</span>
-                  </div>
-                ))}
-              </div>
+          {/* Dimmed at rest on hover-capable screens; pops while hovered (see .gh-graph) */}
+          <div className="gh-graph">
+            <div ref={scrollRef} className="overflow-x-auto no-scrollbar">
+              <div className="flex flex-col gap-2 min-w-[720px]">
+                {/* Month labels */}
+                <div className="flex gap-[3px] font-consolas text-[10px] text-gray-500">
+                  {monthLabels.map((label, i) => (
+                    <div key={i} className="flex-1 min-w-0 overflow-visible">
+                      <span className="whitespace-nowrap">{label}</span>
+                    </div>
+                  ))}
+                </div>
 
-              {/* Grid */}
-              <div className="flex gap-[3px]">
-                {weeks.map((week, i) => (
-                  <div key={i} className="flex-1 flex flex-col gap-[3px]">
-                    {week.map((day, j) =>
-                      day ? (
-                        <div
-                          key={day.date}
-                          title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${formatDate(day.date)}`}
-                          className={`w-full aspect-square rounded-[2px] ${levelColors[day.level] ?? levelColors[0]}`}
-                        />
-                      ) : (
-                        <div key={`pad-${j}`} className="w-full aspect-square" />
-                      ),
-                    )}
-                  </div>
-                ))}
+                {/* Grid */}
+                <div className="flex gap-[3px]">
+                  {weeks.map((week, i) => (
+                    <div key={i} className="flex-1 flex flex-col gap-[3px]">
+                      {week.map((day, j) =>
+                        day ? (
+                          <div
+                            key={day.date}
+                            title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${formatDate(day.date)}`}
+                            className={`w-full aspect-square rounded-[2px] ${levelColors[day.level] ?? levelColors[0]}`}
+                          />
+                        ) : (
+                          <div
+                            key={`pad-${j}`}
+                            className="w-full aspect-square"
+                          />
+                        ),
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Legend */}
-          <div className="flex items-center justify-end gap-2 pt-4 font-consolas text-[10px] text-gray-500">
-            <span>Less</span>
-            {levelColors.map((color, i) => (
-              <div key={i} className={`w-[11px] h-[11px] rounded-[2px] ${color}`} />
-            ))}
-            <span>More</span>
+            {/* Legend */}
+            <div className="flex items-center justify-end gap-2 pt-4 font-consolas text-[10px] text-gray-500">
+              <span>Less</span>
+              {levelColors.map((color, i) => (
+                <div
+                  key={i}
+                  className={`w-[11px] h-[11px] rounded-[2px] ${color}`}
+                />
+              ))}
+              <span>More</span>
+            </div>
           </div>
         </motion.div>
       </div>
