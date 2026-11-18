@@ -131,7 +131,7 @@ const Hero = () => {
       {/* Main Title Section */}
       <div className="mb-12 md:mb-20 z-10">
         <h1 className="font-consolas text-2xl md:text-4xl lg:text-6xl font-bold text-white leading-[1.1] max-w-6xl animate-slide-up-fade opacity-0 [animation-delay:400ms]">
-          Front End Developer & AI Automation Engineer
+          Fullstack Engineer & AI Automation Engineer
         </h1>
       </div>
 
